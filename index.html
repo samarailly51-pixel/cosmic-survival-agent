@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>&#26410;&#26469;&#26143;&#38469;&#29983;&#23384;&#25351;&#21335; AI Agent</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <canvas class="neural-backdrop" id="neuralBackdrop" aria-hidden="true"></canvas>
+    <main class="app-shell">
+      <section class="mission-panel" aria-label="Deep space mission status">
+        <div class="mars-scene" aria-hidden="true">
+          <div class="sun"></div>
+          <div class="planet">
+            <span class="dome dome-a"></span>
+            <span class="dome dome-b"></span>
+            <span class="track"></span>
+          </div>
+          <div class="dust dust-a"></div>
+          <div class="dust dust-b"></div>
+        </div>
+
+        <div class="mission-heading">
+          <p class="eyebrow">Deep Space Civilian Navigation Protocol</p>
+          <h1 id="appTitle"></h1>
+          <p id="appIntro"></p>
+        </div>
+
+        <div class="status-grid" id="statusGrid"></div>
+
+        <div class="timeline">
+          <div>
+            <span id="solLabel"></span>
+            <strong id="solCounter">Sol 001</strong>
+          </div>
+          <div>
+            <span id="delayLabel"></span>
+            <strong id="delayCounter"></strong>
+          </div>
+          <div>
+            <span id="riskTitle"></span>
+            <strong id="riskLabel"></strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="agent-panel" aria-label="Deep space survival AI Agent">
+        <header class="agent-header">
+          <div>
+            <p class="eyebrow">Nebula Navigator</p>
+            <h2 id="agentName"></h2>
+          </div>
+          <button class="icon-button" id="resetButton" type="button" title="Reset mission">
+            <span aria-hidden="true">R</span>
+            <span class="sr-only">Reset mission</span>
+          </button>
+        </header>
+
+        <div class="neural-interface" id="neuralInterface">
+          <canvas id="neuralCanvas" aria-hidden="true"></canvas>
+          <div class="ai-core" id="aiCore">
+            <span class="core-ring"></span>
+            <span class="core-ring core-ring-b"></span>
+            <span class="core-label">ZR-03</span>
+            <strong id="coreStatus">ONLINE</strong>
+          </div>
+          <div class="neural-nodes" id="quickActions" aria-label="Neural commands"></div>
+          <div class="star-inspector" id="starInspector">
+            <strong id="inspectorTitle">&#20013;&#22830;&#23548;&#33322;&#26680;</strong>
+            <span id="inspectorMeta">ZR-03 / Deep Space Map</span>
+          </div>
+          <div class="star-controls" aria-label="Star map controls">
+            <label>
+              <span>&#31890;&#23376;&#22823;&#23567;</span>
+              <input id="particleSize" type="range" min="0.6" max="1.8" step="0.1" value="1" />
+            </label>
+            <label>
+              <span>&#32447;&#26465;&#20142;&#24230;</span>
+              <input id="lineBrightness" type="range" min="0.4" max="1.8" step="0.1" value="1" />
+            </label>
+            <button id="labelsToggle" type="button">&#26174;&#31034;&#20840;&#37096;</button>
+            <button id="motionToggle" type="button">&#26242;&#20572;</button>
+          </div>
+        </div>
+
+        <div class="chat-window" id="chatWindow" aria-live="polite"></div>
+
+        <form class="command-bar" id="commandForm">
+          <input id="commandInput" name="command" type="text" autocomplete="off" />
+          <button id="sendButton" type="submit"></button>
+        </form>
+      </section>
+
+      <aside class="survival-panel" aria-label="Survival tasks">
+        <section>
+          <div class="section-title">
+            <h2 id="checkTitle"></h2>
+            <span id="checkProgress">0/5</span>
+          </div>
+          <div class="checklist" id="checklist"></div>
+        </section>
+
+        <section>
+          <div class="section-title">
+            <h2 id="eventTitle"></h2>
+            <span id="eventSeverity"></span>
+          </div>
+          <div class="event-card" id="eventCard"></div>
+        </section>
+
+        <section>
+          <div class="section-title">
+            <h2 id="knowledgeTitle"></h2>
+            <span id="chipIndex">01</span>
+          </div>
+          <article class="knowledge-card" id="knowledgeCard"></article>
+        </section>
+      </aside>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
