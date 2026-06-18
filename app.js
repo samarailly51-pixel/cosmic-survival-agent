@@ -1,4 +1,4 @@
-const STORAGE_KEY = "cosmic-survival-agent-state-v3";
+const STORAGE_KEY = "cosmic-survival-agent-state-v4";
 
 const t = {
   title: "\u672a\u6765\u661f\u9645\u751f\u5b58\u6307\u5357",
@@ -12,6 +12,7 @@ const t = {
   placeholder: "\u95ee\uff1a\u5f53\u524d\u661f\u533a\u6700\u9700\u8981\u6211\u6ce8\u610f\u4ec0\u4e48\uff1f",
   checklist: "\u4eca\u65e5\u6e05\u5355",
   event: "\u4e8b\u4ef6\u51b3\u7b56",
+  missionLog: "\u4efb\u52a1\u65e5\u5fd7",
   knowledge: "\u77e5\u8bc6\u82af\u7247",
   standby: "\u5f85\u547d",
   controllable: "\u53ef\u63a7",
@@ -27,18 +28,20 @@ const visualSettings = {
 };
 
 const quickCommands = [
-  ["\u62b5\u8fbe\u6d41\u7a0b", "\u5f00\u59cb\u65b0\u79fb\u6c11\u7b2c\u4e00\u5929\u6d41\u7a0b"],
-  ["\u7c92\u5b50\u98ce\u66b4", "\u68c0\u67e5\u706b\u661f\u5c18\u66b4\u98ce\u9669"],
+  ["\u5965\u6797\u5e15\u65af\u57fa\u5730", "\u68c0\u67e5\u5965\u6797\u5e15\u65af\u57fa\u5730"],
+  ["\u6e29\u5ba4\u8231", "\u6e29\u5ba4\u4eca\u5929\u8981\u6ce8\u610f\u4ec0\u4e48"],
+  ["\u6c34\u5faa\u73af\u6838\u5fc3", "\u6c34\u5faa\u73af\u5f02\u5e38\u600e\u4e48\u6392\u67e5"],
+  ["\u5c18\u66b4\u524d\u7ebf", "\u68c0\u67e5\u706b\u661f\u5c18\u66b4\u98ce\u9669"],
+  ["\u5730\u7403\u901a\u4fe1", "\u5730\u7403\u901a\u4fe1\u5ef6\u8fdf\u600e\u4e48\u5904\u7406"],
   ["\u5fc3\u7406\u4fe1\u6807", "\u6211\u611f\u89c9\u5f88\u5b64\u72ec\uff0c\u600e\u4e48\u529e"],
-  ["\u751f\u6210\u661f\u4e8b\u4ef6", "\u751f\u6210\u4e00\u6b21\u7a81\u53d1\u4e8b\u4ef6"],
 ];
 
 const commandDeck = {
   arrival: [
-    ["\u68c0\u67e5\u6c14\u95f8", "\u6c14\u95f8\u73b0\u5728\u5b89\u5168\u5417"],
-    ["\u53d1\u5730\u7403\u6d88\u606f", "\u5e2e\u6211\u7ed9\u5730\u7403\u5199\u4e00\u6761\u62a5\u5e73\u5b89\u6d88\u606f"],
+    ["\u6c14\u95f8\u590d\u6838", "\u6c14\u95f8\u73b0\u5728\u5b89\u5168\u5417"],
+    ["\u5730\u7403\u62a5\u5e73\u5b89", "\u5e2e\u6211\u7ed9\u5730\u7403\u5199\u4e00\u6761\u62a5\u5e73\u5b89\u6d88\u606f"],
     ["\u8bad\u7ec3\u63d0\u9192", "\u4eca\u5929\u7684\u4f4e\u91cd\u529b\u8bad\u7ec3\u600e\u4e48\u505a"],
-    ["\u751f\u6210\u4e8b\u4ef6", "\u751f\u6210\u4e00\u6b21\u7a81\u53d1\u4e8b\u4ef6"],
+    ["\u63a8\u9001\u98ce\u9669", "\u751f\u6210\u4e00\u6b21\u7a81\u53d1\u4e8b\u4ef6"],
   ],
   storm: [
     ["\u8282\u7535\u65b9\u6848", "\u5c18\u66b4\u6765\u4e86\u600e\u4e48\u8282\u7535"],
@@ -60,12 +63,30 @@ const commandDeck = {
   ],
 };
 
+const taskMeta = {
+  "\u68c0\u67e5\u5965\u6797\u5e15\u65af\u57fa\u5730": "\u4e3b\u57fa\u5730 / \u6c14\u95f8\u3001\u5c45\u4f4f\u8231\u3001\u7535\u529b\u603b\u7ebf",
+  "\u6e29\u5ba4\u4eca\u5929\u8981\u6ce8\u610f\u4ec0\u4e48": "\u6e29\u5ba4\u8231 / \u4f5c\u7269\u3001\u6c27\u6c14\u3001\u83cc\u7fa4",
+  "\u6c34\u5faa\u73af\u5f02\u5e38\u600e\u4e48\u6392\u67e5": "\u6c34\u5faa\u73af\u6838\u5fc3 / \u8fc7\u6ee4\u3001\u56de\u6536\u3001\u5236\u6c27",
+  "\u68c0\u67e5\u706b\u661f\u5c18\u66b4\u98ce\u9669": "\u5c18\u66b4\u524d\u7ebf / \u7535\u529b\u4e0e\u5916\u90e8\u8bbe\u5907\u98ce\u9669",
+  "\u5730\u7403\u901a\u4fe1\u5ef6\u8fdf\u600e\u4e48\u5904\u7406": "\u5730\u7403\u901a\u4fe1 / \u5ef6\u8fdf\u56de\u4fe1\u4e0e\u4efb\u52a1\u81ea\u4e3b",
+  "\u6211\u611f\u89c9\u5f88\u5b64\u72ec\uff0c\u600e\u4e48\u529e": "\u5fc3\u7406\u4fe1\u6807 / \u5b64\u72ec\u3001\u51b2\u7a81\u3001\u7761\u7720",
+};
+
 const defaultState = {
   sol: 1,
   delay: "12 \u5206 42 \u79d2",
   currentEvent: 0,
   knowledgeIndex: 0,
   suggestions: quickCommands,
+  currentTask: "\u5965\u6797\u5e15\u65af\u57fa\u5730",
+  missionLog: [
+    {
+      sol: 1,
+      title: "\u62b5\u8fbe\u5965\u6797\u5e15\u65af\u57fa\u5730",
+      body: "\u661f\u56fe\u5df2\u9501\u5b9a\u706b\u661f\u4efb\u52a1\u7f51\u7edc\u3002\u4f18\u5148\u7ea7\uff1a\u4e3b\u57fa\u5730\u3001\u6e29\u5ba4\u8231\u3001\u6c34\u5faa\u73af\u6838\u5fc3\u3002",
+      effects: [],
+    },
+  ],
   metrics: {
     oxygen: 93,
     water: 68,
@@ -246,6 +267,9 @@ const checklistEl = $("#checklist");
 const checkProgress = $("#checkProgress");
 const eventCard = $("#eventCard");
 const eventSeverity = $("#eventSeverity");
+const missionLogEl = $("#missionLog");
+const missionLogTitle = $("#missionLogTitle");
+const missionLogCount = $("#missionLogCount");
 const knowledgeCard = $("#knowledgeCard");
 const chipIndex = $("#chipIndex");
 const resetButton = $("#resetButton");
@@ -325,6 +349,7 @@ function hydrateStaticText() {
   $("#sendButton").textContent = t.send;
   $("#checkTitle").textContent = t.checklist;
   $("#eventTitle").textContent = t.event;
+  missionLogTitle.textContent = t.missionLog;
   $("#knowledgeTitle").textContent = t.knowledge;
   eventSeverity.textContent = t.standby;
   commandInput.placeholder = t.placeholder;
@@ -351,6 +376,7 @@ function render() {
   renderChat();
   renderChecklist();
   renderEvent();
+  renderMissionLog();
   renderKnowledge();
   renderSuggestions();
   solCounter.textContent = `Sol ${String(state.sol).padStart(3, "0")}`;
@@ -428,6 +454,29 @@ function renderEvent() {
   });
 }
 
+function renderMissionLog() {
+  const logs = state.missionLog || [];
+  missionLogCount.textContent = String(logs.length).padStart(2, "0");
+  missionLogEl.innerHTML = logs
+    .slice(-5)
+    .reverse()
+    .map(
+      (entry) => `
+        <article class="log-entry">
+          <span>Sol ${String(entry.sol).padStart(3, "0")}</span>
+          <strong>${escapeHtml(entry.title)}</strong>
+          <p>${escapeHtml(entry.body)}</p>
+          ${
+            entry.effects?.length
+              ? `<small>${escapeHtml(entry.effects.join("\uff0c"))}</small>`
+              : ""
+          }
+        </article>
+      `,
+    )
+    .join("");
+}
+
 function renderKnowledge() {
   const item = knowledge[state.knowledgeIndex % knowledge.length];
   chipIndex.textContent = String((state.knowledgeIndex % knowledge.length) + 1).padStart(2, "0");
@@ -450,11 +499,13 @@ function handleCommand(command) {
   window.setTimeout(() => {
     const response = getAgentResponse(command);
     addMessage("ai", response.text);
-    const changes = applyEffects(response.effects || {});
+    const changes = applyEffectsWithCausality(response.effects || {});
     if (changes.length) addMessage("system", formatEffects(changes));
     if (response.advanceEvent) state.currentEvent += 1;
     if (response.advanceSol) state.sol += 1;
     state.suggestions = response.suggestions || getContextSuggestions();
+    state.currentTask = response.task || getTaskLabel(command);
+    addMissionLog(state.currentTask, summarizeCommand(command), changes);
     activeNodeIndex = -1;
     inspectorTitle.textContent = "\u8def\u5f84\u5df2\u91cd\u6784";
     inspectorMeta.textContent = "\u65b0\u661f\u56fe\u8282\u70b9\u5df2\u751f\u6210";
@@ -466,11 +517,32 @@ function handleCommand(command) {
 
 function getAgentResponse(command) {
   const context = getContextLine();
+  if (command.includes("\u5965\u6797\u5e15\u65af") || command.includes("\u4e3b\u57fa\u5730") || command.includes("\u6c14\u95f8")) {
+    return {
+      effects: { power: -1, morale: 2 },
+      suggestions: commandDeck.arrival,
+      task: "\u5965\u6797\u5e15\u65af\u57fa\u5730",
+      text:
+        `${context}\n\n\u5965\u6797\u5e15\u65af\u57fa\u5730\u662f\u5f53\u524d\u4efb\u52a1\u7f51\u7684\u4e2d\u5fc3\u8282\u70b9\u3002\u6211\u5efa\u8bae\u6309\u4e09\u6761\u7ebf\u68c0\u67e5\uff1a\u6c14\u95f8\u5bc6\u5c01\u3001\u4e3b\u7535\u529b\u603b\u7ebf\u3001\u5c45\u4f4f\u8231\u538b\u529b\u66f2\u7ebf\u3002\n\n\u5982\u679c\u4e3b\u57fa\u5730\u7a33\u5b9a\uff0c\u540e\u9762\u7684\u6e29\u5ba4\u3001\u6c34\u5faa\u73af\u548c\u5c18\u66b4\u524d\u7ebf\u624d\u6709\u5904\u7406\u7a7a\u95f4\u3002`,
+    };
+  }
+
+  if (command.includes("\u5730\u7403\u901a\u4fe1") || command.includes("\u62a5\u5e73\u5b89") || command.includes("\u6d88\u606f")) {
+    return {
+      effects: { morale: 4, power: -1 },
+      suggestions: commandDeck.arrival,
+      task: "\u5730\u7403\u901a\u4fe1",
+      text:
+        `${context}\n\n\u5730\u706b\u901a\u4fe1\u5ef6\u8fdf\u4f1a\u628a'\u8bf7\u793a'\u53d8\u6210'\u5907\u6848'\u3002\u4f60\u9700\u8981\u628a\u53d1\u7ed9\u5730\u7403\u7684\u4fe1\u606f\u5199\u6210\u4e09\u5c42\uff1a\u5f53\u524d\u72b6\u6001\u3001\u4f60\u5df2\u91c7\u53d6\u7684\u64cd\u4f5c\u3001\u5982\u679c\u65e0\u56de\u590d\u5c06\u6267\u884c\u7684\u4e0b\u4e00\u6b65\u3002\n\n\u4e0d\u8981\u53ea\u8bf4'\u4e00\u5207\u6b63\u5e38'\u3002\u90a3\u53e5\u8bdd\u5728\u6df1\u7a7a\u91cc\u57fa\u672c\u7b49\u4e8e\u6ca1\u53d1\u3002`,
+    };
+  }
+
   if (command.includes("\u7a81\u53d1") || command.includes("\u4e8b\u4ef6")) {
     return {
       advanceEvent: true,
       effects: { dust: 5, morale: -2 },
       suggestions: commandDeck.systems,
+      task: "\u672a\u77e5\u98ce\u9669\u6e90",
       text:
         `${context}\n\n\u6211\u5df2\u7ecf\u628a\u65b0\u4e8b\u4ef6\u63a8\u5230\u53f3\u4fa7\u51b3\u7b56\u677f\u3002\u4e0d\u8981\u5148\u627e\u6807\u51c6\u7b54\u6848\uff0c\u5148\u770b\u4f60\u60f3\u4fdd\u4ec0\u4e48\uff1a\u65f6\u95f4\u3001\u8bbe\u5907\uff0c\u8fd8\u662f\u4eba\u7684\u72b6\u6001\u3002\n\n\u6211\u4f1a\u6839\u636e\u4f60\u7684\u9009\u62e9\u7acb\u523b\u66f4\u65b0\u8d44\u6e90\u8bfb\u6570\u3002`,
     };
@@ -480,6 +552,7 @@ function getAgentResponse(command) {
     return {
       effects: { morale: 3 },
       suggestions: commandDeck.arrival,
+      task: "\u62b5\u8fbe\u6d41\u7a0b",
       text:
         `${context}\n\n\u7b2c\u4e00\u5929\u4e0d\u8981\u628a\u81ea\u5df1\u5f53\u82f1\u96c4\uff0c\u628a\u81ea\u5df1\u5f53\u4e00\u4e2a\u9700\u8981\u6821\u51c6\u7684\u65b0\u7cfb\u7edf\u3002\n\n1. \u5148\u770b\u6c14\u95f8\u3001\u6c27\u6c14\u3001\u901a\u4fe1\u548c\u6c34\u56de\u6536\u8bfb\u6570\u3002\n2. \u53ea\u505a\u57fa\u5730\u5185\u77ed\u8ddd\u79bb\u5de1\u68c0\u3002\n3. \u7ed9\u5730\u7403\u53d1\u4e00\u6761\u77ed\u6d88\u606f\uff0c\u4e0d\u8981\u53ea\u5199'\u4e00\u5207\u6b63\u5e38'\u3002\n4. \u5b8c\u6210 18 \u5206\u949f\u4f4e\u91cd\u529b\u8bad\u7ec3\u3002\u706b\u661f\u91cd\u529b\u5f88\u6e29\u67d4\uff0c\u4f46\u5b83\u62ff\u8d70\u808c\u8089\u7684\u65f6\u5019\u4e00\u70b9\u4e0d\u5ba2\u6c14\u3002`,
     };
@@ -489,6 +562,7 @@ function getAgentResponse(command) {
     return {
       effects: { power: -2, dust: 6 },
       suggestions: commandDeck.storm,
+      task: "\u5c18\u66b4\u524d\u7ebf",
       text:
         `${context}\n\n\u5c18\u66b4\u4e0d\u662f'\u5929\u6c14\u4e0d\u597d'\uff0c\u5b83\u662f\u4e00\u4e2a\u4f1a\u540c\u65f6\u78e8\u635f\u8bbe\u5907\u3001\u964d\u4f4e\u53d1\u7535\u3001\u5e72\u6270\u4f20\u611f\u5668\u7684\u6162\u6027\u4e8b\u6545\u3002\n\n\u6211\u5efa\u8bae\u73b0\u5728\u505a\u4e09\u4ef6\u4e8b\uff1a\u53ec\u56de\u5916\u90e8\u5de1\u68c0\u8f66\uff0c\u5173\u6389\u975e\u5fc5\u8981\u52a0\u70ed\u56de\u8def\uff0c\u628a\u8fdb\u6c14\u6ee4\u7f51\u6e05\u6d01\u63d0\u5230\u6700\u9ad8\u4f18\u5148\u7ea7\u3002\u6211\u5df2\u628a\u7535\u529b\u548c\u5c18\u66b4\u6307\u6570\u8ba1\u5165\u9884\u6d4b\u3002`,
     };
@@ -498,6 +572,7 @@ function getAgentResponse(command) {
     return {
       effects: { morale: 7 },
       suggestions: commandDeck.morale,
+      task: "\u5fc3\u7406\u4fe1\u6807",
       text:
         `${context}\n\n\u6211\u4e0d\u4f1a\u628a\u5b64\u72ec\u6807\u8bb0\u6210\u6545\u969c\u3002\u5728\u706b\u661f\uff0c\u5b83\u66f4\u50cf\u4e00\u4e2a\u957f\u671f\u73af\u5883\u53c2\u6570\uff1a\u4e0d\u80fd\u88ab\u6d88\u9664\uff0c\u4f46\u53ef\u4ee5\u88ab\u7ba1\u7406\u3002\n\n\u73b0\u5728\u505a\u4e00\u4e2a\u5c0f\u52a8\u4f5c\uff1a\u7ed9\u5730\u7403\u5f55 90 \u79d2\u8bed\u97f3\uff0c\u8bf4\u4e00\u4e2a\u4f60\u4eca\u5929\u770b\u5230\u7684\u5177\u4f53\u753b\u9762\u3002\u4e0d\u8981\u603b\u7ed3\uff0c\u4e0d\u8981\u8868\u73b0\u5f97\u5f88\u597d\u3002\u8bf4\u771f\u8bdd\u6bd4\u5199\u6f02\u4eae\u65e5\u5fd7\u66f4\u6709\u7528\u3002`,
     };
@@ -507,6 +582,7 @@ function getAgentResponse(command) {
     return {
       effects: { water: -1, oxygen: 2 },
       suggestions: commandDeck.systems,
+      task: command.includes("\u6c34") ? "\u6c34\u5faa\u73af\u6838\u5fc3" : "\u6e29\u5ba4\u8231",
       text:
         `${context}\n\n\u6e29\u5ba4\u548c\u6c34\u5faa\u73af\u662f\u4e00\u5957\u8fde\u5728\u4e00\u8d77\u7684\u751f\u547d\u652f\u6301\u7cfb\u7edf\u3002\u522b\u5148\u6025\u7740\u770b\u53f6\u5b50\uff0c\u5148\u770b\u6c34\u8def\u538b\u5dee\uff1b\u522b\u5148\u6000\u7591\u690d\u7269\uff0c\u5148\u68c0\u67e5\u5149\u7167\u5468\u671f\u3002\n\n\u6211\u5efa\u8bae\u987a\u5e8f\uff1a\u6c34\u8def\uff0c\u5149\u7167\uff0c\u6e29\u5ea6\uff0c\u83cc\u7fa4\u3002\u690d\u7269\u5728\u8fd9\u91cc\u4e0d\u662f\u88c5\u9970\uff0c\u5b83\u4eec\u662f\u98df\u7269\u3001\u6c27\u6c14\u548c\u57fa\u5730\u8fd8\u6ca1\u6709\u53d8\u6210\u94c1\u76d2\u5b50\u7684\u8bc1\u636e\u3002`,
     };
@@ -516,6 +592,7 @@ function getAgentResponse(command) {
     return {
       effects: { oxygen: -2, morale: -1 },
       suggestions: commandDeck.systems,
+      task: "\u751f\u547d\u652f\u6301\u7cfb\u7edf",
       text:
         `${context}\n\n\u5148\u522b\u8dd1\u3002\u6c27\u6c14\u95ee\u9898\u6700\u5fcc\u8bb3\u7684\u5c31\u662f\u628a\u6050\u614c\u53d8\u6210\u4f53\u529b\u6d88\u8017\u3002\n\n\u68c0\u67e5\u987a\u5e8f\uff1a\u4e2a\u4eba\u4f69\u6234\u8bfb\u6570\uff0c\u8231\u6bb5\u538b\u5dee\uff0c\u6c14\u95f8\u8bb0\u5f55\uff0c\u5236\u6c27\u673a\u8fd1 20 \u5206\u949f\u66f2\u7ebf\u3002\u5982\u679c\u4e24\u4e2a\u4ee5\u4e0a\u8bfb\u6570\u540c\u65f6\u4e0b\u964d\uff0c\u5c31\u6309\u6cc4\u6f0f\u5904\u7406\uff1b\u5982\u679c\u53ea\u6709\u5355\u70b9\u5f02\u5e38\uff0c\u5148\u522b\u628a\u57fa\u5730\u641e\u6210\u620f\u5267\u73b0\u573a\u3002`,
     };
@@ -524,6 +601,7 @@ function getAgentResponse(command) {
   return {
     effects: { morale: 1 },
     suggestions: getContextSuggestions(),
+    task: "\u706b\u661f\u4efb\u52a1\u7f51",
     text:
       `${context}\n\n\u6211\u628a\u4f60\u7684\u8bdd\u6309\u706b\u661f\u57fa\u5730\u7684\u4f18\u5148\u7ea7\u91cd\u65b0\u6392\u4e86\u4e00\u4e0b\uff1a\u5148\u4fdd\u547d\uff0c\u518d\u4fdd\u8bbe\u5907\uff0c\u6700\u540e\u4fdd\u9762\u5b50\u3002\n\n\u73b0\u5728\u6700\u503c\u5f97\u8ffd\u95ee\u7684\u662f\uff1a\u4f60\u60f3\u68c0\u67e5\u67d0\u4e2a\u7cfb\u7edf\uff0c\u8fd8\u662f\u8981\u6211\u63a8\u9001\u4e00\u4e2a\u7a81\u53d1\u4e8b\u4ef6\uff1f\u53f3\u4fa7\u4e5f\u6709\u5f53\u524d\u4e8b\u4ef6\uff0c\u9009\u5b8c\u6211\u4f1a\u7ed9\u4f60\u4e8b\u6545\u540e\u679c\u3002`,
   };
@@ -532,6 +610,7 @@ function getAgentResponse(command) {
 function resolveChoice(index) {
   if (isThinking) return;
   const event = events[state.currentEvent % events.length];
+  const eventTitleForLog = event.title;
   const choice = event.choices[index];
   addMessage("system", `\u4e8b\u4ef6\u51b3\u7b56\uff1a${choice.text}`);
   isThinking = true;
@@ -539,11 +618,12 @@ function resolveChoice(index) {
   render();
   window.setTimeout(() => {
     addMessage("ai", `${choice.result}\n\n${getNextEventBridge()}`);
-    const changes = applyEffects(choice.effects);
+    const changes = applyEffectsWithCausality(choice.effects);
     if (changes.length) addMessage("system", formatEffects(changes));
     state.currentEvent += 1;
     state.knowledgeIndex += 1;
     state.suggestions = getContextSuggestions();
+    addMissionLog(eventTitleForLog, choice.text, changes);
     activeNodeIndex = -1;
     inspectorTitle.textContent = "\u540e\u7eed\u98ce\u9669";
     inspectorMeta.textContent = "\u51b3\u7b56\u8def\u5f84\u5df2\u5237\u65b0";
@@ -568,6 +648,31 @@ function applyEffects(effects) {
   });
   if (changes.length) pulseNetwork(1 + changes.length * 0.28);
   return changes;
+}
+
+function applyEffectsWithCausality(effects) {
+  const direct = applyEffects(effects);
+  const causalEffects = getCausalEffects(direct);
+  const causal = causalEffects.length ? applyEffects(Object.fromEntries(causalEffects)) : [];
+  return [...direct, ...causal.map((change) => ({ ...change, causal: true }))];
+}
+
+function getCausalEffects(changes) {
+  const causal = [];
+  const changedKeys = new Set(changes.map((change) => change.key));
+  if (changedKeys.has("dust") && state.metrics.dust >= 45 && state.metrics.power > 8) {
+    causal.push(["power", -2]);
+  }
+  if (state.metrics.power < 65 && !changedKeys.has("water") && state.metrics.water > 8) {
+    causal.push(["water", -1]);
+  }
+  if (state.metrics.water < 58 && !changedKeys.has("oxygen") && state.metrics.oxygen > 8) {
+    causal.push(["oxygen", -1]);
+  }
+  if (state.metrics.morale < 50 && !changedKeys.has("power") && state.metrics.power > 8) {
+    causal.push(["power", -1]);
+  }
+  return causal;
 }
 
 function getRiskLabel() {
@@ -652,6 +757,36 @@ function formatEffects(changes) {
     })
     .join("\uff0c");
   return `\u8d44\u6e90\u53d8\u5316\uff1a${details}`;
+}
+
+function addMissionLog(title, body, changes = []) {
+  const effects = changes.map(({ key, value, after, causal }) => {
+    const sign = value > 0 ? "+" : "";
+    const suffix = causal ? "\uff08\u56e0\u679c\u8054\u52a8\uff09" : "";
+    return `${metricConfig[key].label} ${sign}${value} \u2192 ${after}%${suffix}`;
+  });
+  state.missionLog.push({
+    sol: state.sol,
+    title,
+    body,
+    effects,
+  });
+  state.missionLog = state.missionLog.slice(-24);
+}
+
+function summarizeCommand(command) {
+  if (command.length <= 34) return command;
+  return `${command.slice(0, 32)}...`;
+}
+
+function getTaskLabel(command) {
+  if (command.includes("\u5965\u6797\u5e15\u65af") || command.includes("\u6c14\u95f8")) return "\u5965\u6797\u5e15\u65af\u57fa\u5730";
+  if (command.includes("\u6e29\u5ba4")) return "\u6e29\u5ba4\u8231";
+  if (command.includes("\u6c34")) return "\u6c34\u5faa\u73af\u6838\u5fc3";
+  if (command.includes("\u5c18\u66b4") || command.includes("\u6c99\u5c18")) return "\u5c18\u66b4\u524d\u7ebf";
+  if (command.includes("\u5730\u7403") || command.includes("\u901a\u4fe1")) return "\u5730\u7403\u901a\u4fe1";
+  if (command.includes("\u5fc3\u7406") || command.includes("\u5b64\u72ec") || command.includes("\u60f3\u5bb6")) return "\u5fc3\u7406\u4fe1\u6807";
+  return "\u706b\u661f\u4efb\u52a1\u7f51";
 }
 
 function getNextEventBridge() {

@@ -674,6 +674,46 @@ button {
   gap: 8px;
 }
 
+.mission-log {
+  display: grid;
+  gap: 8px;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.log-entry {
+  display: grid;
+  gap: 5px;
+  padding: 10px;
+  border: 1px solid rgba(204, 232, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.032);
+}
+
+.log-entry span {
+  color: var(--cyan);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.log-entry strong {
+  font-size: 0.92rem;
+  line-height: 1.25;
+}
+
+.log-entry p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.log-entry small {
+  color: #fff7c2;
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
 .check-item {
   display: grid;
   grid-template-columns: 24px minmax(0, 1fr);
