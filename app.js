@@ -1,4 +1,4 @@
-const STORAGE_KEY = "cosmic-survival-agent-state-v5";
+const STORAGE_KEY = "cosmic-survival-agent-state-v6";
 
 const t = {
   title: "\u672a\u6765\u661f\u9645\u751f\u5b58\u6307\u5357",
@@ -292,6 +292,7 @@ let frozenTime = 0;
 
 const $ = (selector) => document.querySelector(selector);
 const statusGrid = $("#statusGrid");
+const riskAdvisor = $("#riskAdvisor");
 const solCounter = $("#solCounter");
 const delayCounter = $("#delayCounter");
 const riskLabel = $("#riskLabel");
@@ -412,6 +413,7 @@ function saveState() {
 function render() {
   agentPanel.classList.toggle("thinking", isThinking);
   renderMetrics();
+  renderRiskAdvisor();
   renderChat();
   renderChecklist();
   renderProtocol();
@@ -441,6 +443,28 @@ function renderMetrics() {
       `;
     })
     .join("");
+}
+
+function renderRiskAdvisor() {
+  const diagnosis = getRiskDiagnosis();
+  riskAdvisor.innerHTML = `
+    <div class="risk-advisor-head">
+      <span>AI \u98ce\u9669\u8bca\u65ad</span>
+      <strong>${escapeHtml(diagnosis.level)}</strong>
+    </div>
+    <p>${escapeHtml(diagnosis.summary)}</p>
+    <div class="risk-chain">
+      ${diagnosis.chain.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}
+    </div>
+    <button type="button" data-risk-command="${escapeHtml(diagnosis.command)}">${escapeHtml(diagnosis.action)}</button>
+  `;
+  const button = riskAdvisor.querySelector("[data-risk-command]");
+  button.addEventListener("click", () => {
+    inspectorTitle.textContent = "\u98ce\u9669\u8bca\u65ad";
+    inspectorMeta.textContent = button.dataset.riskCommand;
+    pulseNetwork(1.4);
+    handleCommand(button.dataset.riskCommand);
+  });
 }
 
 function renderChat() {
@@ -642,6 +666,16 @@ function getAgentResponse(command) {
     };
   }
 
+  if (command.includes("\u8f90\u5c04")) {
+    return {
+      effects: { radiation: -4, power: -1 },
+      suggestions: getProtocolSuggestions(commandDeck.storm),
+      task: "\u8f90\u5c04\u98ce\u9669\u7ba1\u7406",
+      text:
+        `${context}\n\n\u8f90\u5c04\u98ce\u9669\u4e0d\u9002\u5408\u9760\u4e34\u573a\u82f1\u52c7\u89e3\u51b3\u3002\u628a\u5b83\u5f53\u6210\u4e00\u4e2a\u65f6\u95f4\u9884\u7b97\uff1a\u51cf\u5c11\u5916\u90e8\u66b4\u9732\u3001\u628a\u5de1\u68c0\u6539\u4e3a\u673a\u5668\u6267\u884c\u3001\u628a\u9ad8\u5bc6\u5ea6\u7269\u8d44\u79fb\u5230\u5c45\u4f4f\u8231\u5916\u4fa7\u5f53\u4e34\u65f6\u5c4f\u853d\u3002\n\n\u6211\u5df2\u628a\u8f90\u5c04\u6307\u6570\u4e0b\u8c03\uff0c\u4f46\u7535\u529b\u4f1a\u7565\u6709\u6d88\u8017\uff1a\u76d1\u6d4b\u3001\u8231\u95e8\u9501\u5b9a\u548c\u5de1\u68c0\u8c03\u5ea6\u90fd\u9700\u8981\u7535\u3002`,
+    };
+  }
+
   if (command.includes("\u5b64\u72ec") || command.includes("\u60f3\u5bb6") || command.includes("\u5fc3\u7406")) {
     return {
       effects: { morale: 7 },
@@ -756,6 +790,43 @@ function getRiskLabel() {
   if (pressure > 260) return t.danger;
   if (pressure > 210) return t.tense;
   return t.controllable;
+}
+
+function getRiskDiagnosis() {
+  const entries = Object.entries(state.metrics)
+    .map(([key, value]) => {
+      const isHazard = key === "radiation" || key === "dust";
+      return {
+        key,
+        value,
+        label: metricConfig[key].label,
+        score: isHazard ? value + 12 : 100 - value,
+      };
+    })
+    .sort((a, b) => b.score - a.score);
+  const [primary, secondary] = entries;
+  const protocol = getCurrentProtocol();
+  const level = primary.score > 58 ? "\u7acb\u5373\u5904\u7406" : primary.score > 42 ? "\u9700\u76d1\u63a7" : "\u53ef\u63a7";
+  const actionMap = {
+    oxygen: ["\u6267\u884c\u6c27\u6c14\u6392\u67e5", "\u6c27\u6c14\u4e0b\u964d\u4e86\u600e\u4e48\u529e"],
+    water: ["\u68c0\u67e5\u6c34\u5faa\u73af", "\u6c34\u5faa\u73af\u5f02\u5e38\u600e\u4e48\u6392\u67e5"],
+    power: ["\u751f\u6210\u8282\u7535\u65b9\u6848", "\u5c18\u66b4\u6765\u4e86\u600e\u4e48\u8282\u7535"],
+    morale: ["\u7ef4\u62a4\u5fc3\u7406\u4fe1\u6807", "\u6211\u611f\u89c9\u5f88\u5b64\u72ec\uff0c\u600e\u4e48\u529e"],
+    radiation: ["\u590d\u6838\u8f90\u5c04\u7b56\u7565", "\u8f90\u5c04\u98ce\u9669\u4e0a\u5347\u600e\u4e48\u5904\u7406"],
+    dust: ["\u8bc4\u4f30\u5c18\u66b4\u524d\u7ebf", "\u68c0\u67e5\u706b\u661f\u5c18\u66b4\u98ce\u9669"],
+  };
+  const [action, command] = actionMap[primary.key];
+  const summary =
+    primary.score > 42
+      ? `${primary.label}\u662f\u5f53\u524d\u6700\u8106\u5f31\u94fe\u8def\uff0c${secondary.label}\u4f1a\u653e\u5927\u5b83\u7684\u540e\u679c\u3002`
+      : `${protocol.title}\u4ecd\u662f\u4e3b\u7ebf\uff0c\u8d44\u6e90\u8bfb\u6570\u6682\u65f6\u6ca1\u6709\u51fa\u73b0\u5355\u70b9\u5931\u63a7\u3002`;
+  return {
+    level,
+    summary,
+    chain: [primary.label, secondary.label, protocol.title],
+    action,
+    command,
+  };
 }
 
 function getCoreStatus() {

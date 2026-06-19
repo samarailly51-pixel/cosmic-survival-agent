@@ -253,6 +253,66 @@ button {
   transition: width 240ms ease;
 }
 
+.risk-advisor {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(156, 236, 255, 0.16);
+  border-radius: 6px;
+  background:
+    linear-gradient(135deg, rgba(156, 236, 255, 0.08), rgba(255, 159, 206, 0.045)),
+    rgba(255, 255, 255, 0.032);
+}
+
+.risk-advisor-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.risk-advisor-head span {
+  color: var(--cyan);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+}
+
+.risk-advisor-head strong {
+  color: #fff7c2;
+  font-size: 0.9rem;
+}
+
+.risk-advisor p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.risk-chain {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.risk-chain span {
+  padding: 5px 7px;
+  border: 1px solid rgba(204, 232, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--text);
+  font-size: 0.74rem;
+}
+
+.risk-advisor button {
+  min-height: 36px;
+  border: 1px solid rgba(156, 236, 255, 0.24);
+  border-radius: 6px;
+  background: rgba(156, 236, 255, 0.13);
+  color: var(--text);
+  font-weight: 800;
+}
+
 .timeline {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
