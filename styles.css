@@ -337,6 +337,64 @@ button {
   font-size: 0.98rem;
 }
 
+.base-phase {
+  display: grid;
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid rgba(229, 210, 118, 0.16);
+  border-radius: 6px;
+  background:
+    linear-gradient(135deg, rgba(229, 210, 118, 0.08), rgba(156, 236, 255, 0.04)),
+    rgba(255, 255, 255, 0.032);
+}
+
+.base-phase-head,
+.phase-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.base-phase-head span {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.base-phase-head strong {
+  color: #fff7c2;
+  font-size: 0.94rem;
+}
+
+.phase-meter {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.phase-meter i {
+  display: block;
+  width: var(--phase-value);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--cyan), var(--amber));
+  box-shadow: 0 0 18px rgba(229, 210, 118, 0.55);
+  transition: width 240ms ease;
+}
+
+.phase-stats {
+  color: var(--cyan);
+  font-size: 0.72rem;
+}
+
+.base-phase p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
 .agent-panel {
   display: flex;
   flex-direction: column;

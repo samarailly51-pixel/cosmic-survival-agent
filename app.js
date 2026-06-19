@@ -1,4 +1,4 @@
-const STORAGE_KEY = "cosmic-survival-agent-state-v6";
+const STORAGE_KEY = "cosmic-survival-agent-state-v7";
 
 const t = {
   title: "\u672a\u6765\u661f\u9645\u751f\u5b58\u6307\u5357",
@@ -112,6 +112,7 @@ const defaultState = {
   knowledgeIndex: 0,
   protocolIndex: 0,
   completedProtocolTasks: [],
+  completedPhases: [],
   suggestions: quickCommands,
   currentTask: "\u5965\u6797\u5e15\u65af\u57fa\u5730",
   missionLog: [
@@ -293,6 +294,7 @@ let frozenTime = 0;
 const $ = (selector) => document.querySelector(selector);
 const statusGrid = $("#statusGrid");
 const riskAdvisor = $("#riskAdvisor");
+const basePhase = $("#basePhase");
 const solCounter = $("#solCounter");
 const delayCounter = $("#delayCounter");
 const riskLabel = $("#riskLabel");
@@ -414,6 +416,7 @@ function render() {
   agentPanel.classList.toggle("thinking", isThinking);
   renderMetrics();
   renderRiskAdvisor();
+  renderBasePhase();
   renderChat();
   renderChecklist();
   renderProtocol();
@@ -465,6 +468,27 @@ function renderRiskAdvisor() {
     pulseNetwork(1.4);
     handleCommand(button.dataset.riskCommand);
   });
+}
+
+function renderBasePhase() {
+  const stability = getBaseStability();
+  const completedCount = state.completedPhases?.length || 0;
+  const current = getCurrentProtocol();
+  const caption = getBasePhaseCaption(stability);
+  basePhase.innerHTML = `
+    <div class="base-phase-head">
+      <span>\u57fa\u5730\u9636\u6bb5\u72b6\u6001</span>
+      <strong>${escapeHtml(stability.label)}</strong>
+    </div>
+    <div class="phase-meter" style="--phase-value: ${stability.score}%">
+      <i></i>
+    </div>
+    <div class="phase-stats">
+      <span>\u5df2\u7a33\u5b9a\u9636\u6bb5 ${completedCount}</span>
+      <span>\u5f53\u524d\u4e3b\u7ebf ${escapeHtml(current.title)}</span>
+    </div>
+    <p>${escapeHtml(caption)}</p>
+  `;
 }
 
 function renderChat() {
@@ -956,6 +980,7 @@ function advanceProtocol() {
   const completed = new Set(state.completedProtocolTasks || []);
   const isComplete = protocol.tasks.every((task) => completed.has(task.key));
   if (!isComplete || isThinking) return;
+  state.completedPhases = [...(state.completedPhases || []), protocol.title].slice(-12);
   state.protocolIndex = (state.protocolIndex || 0) + 1;
   state.completedProtocolTasks = [];
   state.sol += 1;
@@ -971,6 +996,30 @@ function advanceProtocol() {
   state.metrics.morale = clamp(state.metrics.morale + 2);
   pulseNetwork(2);
   render();
+}
+
+function getBaseStability() {
+  const positive = state.metrics.oxygen + state.metrics.water + state.metrics.power + state.metrics.morale;
+  const hazards = state.metrics.radiation + state.metrics.dust;
+  const completedBonus = Math.min(18, (state.completedPhases?.length || 0) * 4);
+  const score = clamp((positive / 4) - hazards * 0.22 + completedBonus);
+  if (score >= 78) return { score, label: "\u7a33\u5b9a\u6269\u5c55" };
+  if (score >= 62) return { score, label: "\u53ef\u6301\u7eed\u8fd0\u884c" };
+  if (score >= 46) return { score, label: "\u538b\u529b\u8fd0\u884c" };
+  return { score, label: "\u4e34\u754c\u7ef4\u6301" };
+}
+
+function getBasePhaseCaption(stability) {
+  if (stability.score >= 78) {
+    return "\u57fa\u5730\u5df2\u4ece\u751f\u5b58\u6a21\u5f0f\u8f6c\u5411\u6269\u5c55\u6a21\u5f0f\uff0c\u53ef\u4ee5\u5f00\u59cb\u8003\u8651\u66f4\u8fdc\u7684\u706b\u661f\u533a\u57df\u3002";
+  }
+  if (stability.score >= 62) {
+    return "\u57fa\u5730\u80fd\u7ef4\u6301\u8fde\u7eed\u8fd0\u884c\uff0c\u4f46\u4efb\u4f55\u5916\u90e8\u98ce\u9669\u90fd\u4f1a\u653e\u5927\u8d44\u6e90\u6d88\u8017\u3002";
+  }
+  if (stability.score >= 46) {
+    return "\u57fa\u5730\u4ecd\u5728\u8fd0\u884c\uff0c\u4f46\u7cfb\u7edf\u6ca1\u6709\u592a\u591a\u5197\u4f59\uff0c\u4e0b\u4e00\u6b65\u9700\u8981\u5148\u964d\u4f4e\u8106\u5f31\u94fe\u8def\u3002";
+  }
+  return "\u57fa\u5730\u5df2\u63a5\u8fd1\u4e34\u754c\u72b6\u6001\uff0c\u5e94\u505c\u6b62\u975e\u5fc5\u8981\u884c\u52a8\uff0c\u4f18\u5148\u4fdd\u547d\u4e0e\u4fdd\u6301\u95ed\u73af\u3002";
 }
 
 function buildChecklistForProtocol(protocol) {
