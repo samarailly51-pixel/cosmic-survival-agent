@@ -166,6 +166,148 @@ button {
   animation-duration: 11s;
 }
 
+.base-map {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(156, 236, 255, 0.14);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(156, 236, 255, 0.07), rgba(229, 210, 118, 0.035)),
+    rgba(255, 255, 255, 0.028);
+}
+
+.base-map-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.base-map-head span {
+  color: var(--cyan);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+}
+
+.base-map-head strong {
+  color: #fff7c2;
+  font-size: 0.88rem;
+}
+
+.habitat-layout {
+  position: relative;
+  min-height: 210px;
+  overflow: hidden;
+  border: 1px solid rgba(204, 232, 255, 0.12);
+  border-radius: 6px;
+  background:
+    radial-gradient(circle at 50% 52%, rgba(156, 236, 255, 0.16), transparent 32%),
+    linear-gradient(180deg, rgba(3, 5, 12, 0.68), rgba(3, 5, 12, 0.38));
+}
+
+.habitat-layout::before {
+  position: absolute;
+  inset: 18px;
+  content: "";
+  border: 1px dashed rgba(156, 236, 255, 0.12);
+  border-radius: 50%;
+}
+
+.habitat-link {
+  position: absolute;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(156, 236, 255, 0.42), transparent);
+  transform-origin: left center;
+}
+
+.link-a {
+  left: 17%;
+  top: 60%;
+  width: 68%;
+}
+
+.link-b {
+  left: 43%;
+  top: 34%;
+  width: 38%;
+  transform: rotate(32deg);
+}
+
+.link-c {
+  left: 40%;
+  top: 75%;
+  width: 34%;
+  transform: rotate(-23deg);
+}
+
+.compartment {
+  position: absolute;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  border: 1px solid rgba(156, 236, 255, 0.24);
+  border-radius: 8px;
+  background: rgba(7, 12, 22, 0.78);
+  color: var(--text);
+  padding: 7px;
+  text-align: left;
+  box-shadow:
+    0 0 18px rgba(156, 236, 255, 0.12),
+    inset 0 0 16px rgba(156, 236, 255, 0.06);
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.compartment strong {
+  overflow-wrap: anywhere;
+  font-size: 0.82rem;
+  line-height: 1.15;
+}
+
+.compartment span {
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+.compartment:hover {
+  z-index: 2;
+  border-color: rgba(255, 247, 194, 0.78);
+  box-shadow:
+    0 0 20px rgba(229, 210, 118, 0.32),
+    inset 0 0 18px rgba(229, 210, 118, 0.08);
+  transform: translateY(-1px);
+}
+
+.compartment.is-watch {
+  border-color: rgba(229, 210, 118, 0.5);
+}
+
+.compartment.is-watch span {
+  color: #fff7c2;
+}
+
+.compartment.is-critical {
+  border-color: rgba(224, 113, 103, 0.72);
+  box-shadow:
+    0 0 18px rgba(224, 113, 103, 0.28),
+    inset 0 0 16px rgba(224, 113, 103, 0.08);
+}
+
+.compartment.is-critical span {
+  color: #ffb3ac;
+}
+
+.base-map p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
 @keyframes drift {
   from {
     transform: translateX(-10%);

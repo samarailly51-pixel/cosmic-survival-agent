@@ -1,4 +1,4 @@
-const STORAGE_KEY = "cosmic-survival-agent-state-v7";
+const STORAGE_KEY = "cosmic-survival-agent-state-v8";
 
 const t = {
   title: "\u672a\u6765\u661f\u9645\u751f\u5b58\u6307\u5357",
@@ -74,6 +74,75 @@ const taskMeta = {
   "\u5730\u7403\u901a\u4fe1\u5ef6\u8fdf\u600e\u4e48\u5904\u7406": "\u5730\u7403\u901a\u4fe1 / \u5ef6\u8fdf\u56de\u4fe1\u4e0e\u4efb\u52a1\u81ea\u4e3b",
   "\u6211\u611f\u89c9\u5f88\u5b64\u72ec\uff0c\u600e\u4e48\u529e": "\u5fc3\u7406\u4fe1\u6807 / \u5b64\u72ec\u3001\u51b2\u7a81\u3001\u7761\u7720",
 };
+
+const baseCompartments = [
+  {
+    key: "hab",
+    label: "\u5c45\u4f4f\u8231",
+    meta: "\u538b\u529b / \u7761\u7720 / \u961f\u5458\u72b6\u6001",
+    command: "\u68c0\u67e5\u5965\u6797\u5e15\u65af\u57fa\u5730",
+    metric: "morale",
+    x: 18,
+    y: 48,
+    w: 27,
+    h: 26,
+  },
+  {
+    key: "airlock",
+    label: "\u6c14\u95f8",
+    meta: "\u5bc6\u5c01 / EVA / \u5c18\u571f",
+    command: "\u6c14\u95f8\u73b0\u5728\u5b89\u5168\u5417",
+    metric: "oxygen",
+    x: 5,
+    y: 51,
+    w: 15,
+    h: 20,
+  },
+  {
+    key: "power",
+    label: "\u7535\u529b\u8231",
+    meta: "\u84c4\u7535 / \u964d\u8f7d / \u592a\u9633\u80fd",
+    command: "\u5c18\u66b4\u6765\u4e86\u600e\u4e48\u8282\u7535",
+    metric: "power",
+    x: 36,
+    y: 22,
+    w: 28,
+    h: 22,
+  },
+  {
+    key: "greenhouse",
+    label: "\u6e29\u5ba4\u8231",
+    meta: "\u4f5c\u7269 / \u6c27\u6c14 / \u83cc\u7fa4",
+    command: "\u6e29\u5ba4\u4eca\u5929\u8981\u6ce8\u610f\u4ec0\u4e48",
+    metric: "oxygen",
+    x: 57,
+    y: 49,
+    w: 33,
+    h: 24,
+  },
+  {
+    key: "water",
+    label: "\u6c34\u5faa\u73af\u6838\u5fc3",
+    meta: "\u56de\u6536 / \u5236\u6c27 / \u8fc7\u6ee4",
+    command: "\u6c34\u5faa\u73af\u5f02\u5e38\u600e\u4e48\u6392\u67e5",
+    metric: "water",
+    x: 36,
+    y: 67,
+    w: 24,
+    h: 20,
+  },
+  {
+    key: "comm",
+    label: "\u901a\u4fe1\u5854",
+    meta: "\u5ef6\u8fdf / \u5bf9\u5730 / \u81ea\u4e3b\u51b3\u7b56",
+    command: "\u5730\u7403\u901a\u4fe1\u5ef6\u8fdf\u600e\u4e48\u5904\u7406",
+    metric: "radiation",
+    x: 70,
+    y: 18,
+    w: 18,
+    h: 24,
+  },
+];
 
 const solProtocols = [
   {
@@ -295,6 +364,7 @@ const $ = (selector) => document.querySelector(selector);
 const statusGrid = $("#statusGrid");
 const riskAdvisor = $("#riskAdvisor");
 const basePhase = $("#basePhase");
+const baseMap = $("#baseMap");
 const solCounter = $("#solCounter");
 const delayCounter = $("#delayCounter");
 const riskLabel = $("#riskLabel");
@@ -414,6 +484,7 @@ function saveState() {
 
 function render() {
   agentPanel.classList.toggle("thinking", isThinking);
+  renderBaseMap();
   renderMetrics();
   renderRiskAdvisor();
   renderBasePhase();
@@ -429,6 +500,51 @@ function render() {
   riskLabel.textContent = getRiskLabel();
   coreStatus.textContent = getCoreStatus();
   saveState();
+}
+
+function renderBaseMap() {
+  baseMap.innerHTML = `
+    <div class="base-map-head">
+      <span>\u5965\u6797\u5e15\u65af\u57fa\u5730</span>
+      <strong>${escapeHtml(getBaseMapStatus())}</strong>
+    </div>
+    <div class="habitat-layout">
+      <span class="habitat-link link-a"></span>
+      <span class="habitat-link link-b"></span>
+      <span class="habitat-link link-c"></span>
+      ${baseCompartments
+        .map((room) => {
+          const roomState = getCompartmentState(room);
+          return `
+            <button
+              class="compartment ${roomState.className}"
+              type="button"
+              data-compartment="${room.key}"
+              data-command="${escapeHtml(room.command)}"
+              style="left:${room.x}%;top:${room.y}%;width:${room.w}%;height:${room.h}%"
+            >
+              <strong>${escapeHtml(room.label)}</strong>
+              <span>${escapeHtml(roomState.label)}</span>
+            </button>
+          `;
+        })
+        .join("")}
+    </div>
+    <p id="baseMapMeta">\u70b9\u51fb\u8231\u5ba4\u533a\u57df\uff0c\u795d\u878d-03 \u4f1a\u8fdb\u5165\u5bf9\u5e94\u7684\u68c0\u67e5\u6d41\u7a0b\u3002</p>
+  `;
+  baseMap.querySelectorAll("[data-compartment]").forEach((button) => {
+    button.addEventListener("mouseenter", () => {
+      const room = baseCompartments.find((item) => item.key === button.dataset.compartment);
+      $("#baseMapMeta").textContent = `${room.label} / ${room.meta}`;
+    });
+    button.addEventListener("click", () => {
+      const room = baseCompartments.find((item) => item.key === button.dataset.compartment);
+      inspectorTitle.textContent = room.label;
+      inspectorMeta.textContent = room.meta;
+      pulseNetwork(1.4);
+      handleCommand(button.dataset.command);
+    });
+  });
 }
 
 function renderMetrics() {
@@ -639,6 +755,36 @@ function handleCommand(command) {
 
 function getAgentResponse(command) {
   const context = getContextLine();
+  if (command.includes("\u6c14\u95f8")) {
+    return {
+      effects: { oxygen: -1, dust: -2, morale: 1 },
+      suggestions: commandDeck.arrival,
+      task: "\u6c14\u95f8",
+      text:
+        `${context}\n\n\u6c14\u95f8\u662f\u706b\u661f\u57fa\u5730\u6700\u8584\u7684\u90a3\u5c42\u76ae\u80a4\u3002\u5148\u4e0d\u8981\u51fa\u8231\uff0c\u6267\u884c\u4e09\u6b65\uff1a\u5185\u95e8\u538b\u5dee\u590d\u6838\u3001\u5916\u95e8\u5c18\u571f\u6c89\u79ef\u626b\u63cf\u3001\u4e0a\u4e00\u6b21 EVA \u6c14\u5bc6\u8bb0\u5f55\u5bf9\u6bd4\u3002\n\n\u6211\u5df2\u628a\u5c18\u571f\u98ce\u9669\u7565\u5fae\u4e0b\u8c03\uff0c\u4f46\u590d\u6838\u8fc7\u7a0b\u4f1a\u6d88\u8017\u4e00\u70b9\u6c27\u6c14\u548c\u65f6\u95f4\u3002`,
+    };
+  }
+
+  if (command.includes("\u5c45\u4f4f\u8231") || command.includes("\u57fa\u5730\u5e03\u5c40")) {
+    return {
+      effects: { morale: 2, power: -1 },
+      suggestions: commandDeck.arrival,
+      task: "\u5c45\u4f4f\u8231",
+      text:
+        `${context}\n\n\u5c45\u4f4f\u8231\u662f\u57fa\u5730\u91cc\u6700\u4e0d\u50cf\u8bbe\u5907\u3001\u4f46\u6700\u5bb9\u6613\u51fa\u6545\u969c\u7684\u5730\u65b9\u3002\u4eca\u5929\u5148\u770b\u4e09\u9879\uff1a\u8231\u538b\u6ce2\u52a8\u3001\u7761\u7720\u533a\u566a\u58f0\u3001\u961f\u5458\u4e92\u52a8\u9891\u7387\u3002\n\n\u5982\u679c\u4eba\u7684\u72b6\u6001\u4e0b\u6ed1\uff0c\u6240\u6709\u7cfb\u7edf\u90fd\u4f1a\u53d8\u5f97\u66f4\u96be\u7ef4\u62a4\u3002\u6211\u5df2\u5c06\u5c45\u4f4f\u8231\u6807\u8bb0\u4e3a\u9700\u8981\u8f7b\u91cf\u5de1\u68c0\u3002`,
+    };
+  }
+
+  if (command.includes("\u7535\u529b\u8231") || command.includes("\u7535\u529b\u603b\u7ebf")) {
+    return {
+      effects: { power: -2, dust: -1 },
+      suggestions: commandDeck.storm,
+      task: "\u7535\u529b\u8231",
+      text:
+        `${context}\n\n\u7535\u529b\u8231\u76ee\u524d\u662f\u706b\u661f\u57fa\u5730\u7684\u8282\u594f\u5668\u3002\u4f60\u8981\u4f18\u5148\u786e\u8ba4\u4e09\u4ef6\u4e8b\uff1a\u5fc5\u8981\u7cfb\u7edf\u4fdd\u7535\u3001\u975e\u5fc5\u8981\u52a0\u70ed\u56de\u8def\u964d\u8f7d\u3001\u592a\u9633\u80fd\u677f\u5c18\u571f\u8d8b\u52bf\u3002\n\n\u6211\u5df2\u505a\u4e00\u6b21\u5c0f\u5e45\u964d\u8f7d\u6a21\u62df\uff0c\u7535\u529b\u4f1a\u77ed\u6682\u4e0b\u964d\uff0c\u4f46\u5916\u90e8\u5c18\u571f\u538b\u529b\u7565\u6709\u7f13\u89e3\u3002`,
+    };
+  }
+
   if (command.includes("\u5965\u6797\u5e15\u65af") || command.includes("\u4e3b\u57fa\u5730") || command.includes("\u6c14\u95f8")) {
     return {
       effects: { power: -1, morale: 2 },
@@ -814,6 +960,22 @@ function getRiskLabel() {
   if (pressure > 260) return t.danger;
   if (pressure > 210) return t.tense;
   return t.controllable;
+}
+
+function getCompartmentState(room) {
+  const value = state.metrics[room.metric] ?? 100;
+  const isHazard = room.metric === "radiation" || room.metric === "dust";
+  const pressure = isHazard ? value : 100 - value;
+  if (pressure >= 58) return { label: "\u4e34\u754c", className: "is-critical" };
+  if (pressure >= 42) return { label: "\u6ce8\u610f", className: "is-watch" };
+  return { label: "\u7a33\u5b9a", className: "is-stable" };
+}
+
+function getBaseMapStatus() {
+  const states = baseCompartments.map(getCompartmentState);
+  if (states.some((item) => item.className === "is-critical")) return "\u6709\u8231\u5ba4\u4e34\u754c";
+  if (states.some((item) => item.className === "is-watch")) return "\u9700\u8f6e\u503c\u76d1\u63a7";
+  return "\u516d\u8231\u5ba4\u5728\u7ebf";
 }
 
 function getRiskDiagnosis() {
