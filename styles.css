@@ -681,6 +681,93 @@ button {
   overflow: auto;
 }
 
+.protocol-card {
+  display: grid;
+  gap: 10px;
+  border: 1px solid rgba(156, 236, 255, 0.14);
+  border-radius: 6px;
+  background:
+    linear-gradient(135deg, rgba(156, 236, 255, 0.08), rgba(229, 210, 118, 0.04)),
+    rgba(255, 255, 255, 0.032);
+  padding: 12px;
+}
+
+.protocol-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.protocol-head strong {
+  font-size: 0.98rem;
+}
+
+.protocol-head span {
+  color: var(--cyan);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.protocol-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.protocol-tasks {
+  display: grid;
+  gap: 7px;
+}
+
+.protocol-task {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.protocol-task i {
+  width: 11px;
+  aspect-ratio: 1;
+  border: 1px solid rgba(156, 236, 255, 0.34);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(156, 236, 255, 0.2);
+}
+
+.protocol-task.is-done {
+  color: var(--text);
+}
+
+.protocol-task.is-done i {
+  border-color: rgba(229, 210, 118, 0.9);
+  background: var(--amber);
+  box-shadow:
+    0 0 10px rgba(229, 210, 118, 0.9),
+    0 0 22px rgba(229, 210, 118, 0.42);
+}
+
+.protocol-advance {
+  min-height: 38px;
+  border: 1px solid rgba(229, 210, 118, 0.28);
+  border-radius: 6px;
+  background: rgba(229, 210, 118, 0.16);
+  color: var(--text);
+  font-weight: 800;
+}
+
+.protocol-advance:disabled {
+  border-color: rgba(204, 232, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(214, 225, 238, 0.46);
+  cursor: not-allowed;
+}
+
 .log-entry {
   display: grid;
   gap: 5px;

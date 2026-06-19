@@ -1,4 +1,4 @@
-const STORAGE_KEY = "cosmic-survival-agent-state-v4";
+const STORAGE_KEY = "cosmic-survival-agent-state-v5";
 
 const t = {
   title: "\u672a\u6765\u661f\u9645\u751f\u5b58\u6307\u5357",
@@ -11,6 +11,7 @@ const t = {
   send: "\u53d1\u9001",
   placeholder: "\u95ee\uff1a\u5f53\u524d\u661f\u533a\u6700\u9700\u8981\u6211\u6ce8\u610f\u4ec0\u4e48\uff1f",
   checklist: "\u4eca\u65e5\u6e05\u5355",
+  protocol: "Sol \u4efb\u52a1\u534f\u8bae",
   event: "\u4e8b\u4ef6\u51b3\u7b56",
   missionLog: "\u4efb\u52a1\u65e5\u5fd7",
   knowledge: "\u77e5\u8bc6\u82af\u7247",
@@ -39,6 +40,8 @@ const quickCommands = [
 const commandDeck = {
   arrival: [
     ["\u6c14\u95f8\u590d\u6838", "\u6c14\u95f8\u73b0\u5728\u5b89\u5168\u5417"],
+    ["\u6e29\u5ba4\u8231", "\u6e29\u5ba4\u4eca\u5929\u8981\u6ce8\u610f\u4ec0\u4e48"],
+    ["\u6c34\u5faa\u73af", "\u6c34\u5faa\u73af\u5f02\u5e38\u600e\u4e48\u6392\u67e5"],
     ["\u5730\u7403\u62a5\u5e73\u5b89", "\u5e2e\u6211\u7ed9\u5730\u7403\u5199\u4e00\u6761\u62a5\u5e73\u5b89\u6d88\u606f"],
     ["\u8bad\u7ec3\u63d0\u9192", "\u4eca\u5929\u7684\u4f4e\u91cd\u529b\u8bad\u7ec3\u600e\u4e48\u505a"],
     ["\u63a8\u9001\u98ce\u9669", "\u751f\u6210\u4e00\u6b21\u7a81\u53d1\u4e8b\u4ef6"],
@@ -72,11 +75,43 @@ const taskMeta = {
   "\u6211\u611f\u89c9\u5f88\u5b64\u72ec\uff0c\u600e\u4e48\u529e": "\u5fc3\u7406\u4fe1\u6807 / \u5b64\u72ec\u3001\u51b2\u7a81\u3001\u7761\u7720",
 };
 
+const solProtocols = [
+  {
+    title: "\u62b5\u8fbe\u6821\u51c6",
+    focus: "\u786e\u8ba4\u5965\u6797\u5e15\u65af\u57fa\u5730\u3001\u95ed\u73af\u751f\u547d\u652f\u6301\u548c\u5bf9\u5730\u901a\u4fe1\u80fd\u7a33\u5b9a\u8fd0\u884c\u3002",
+    tasks: [
+      { key: "base", label: "\u4e3b\u57fa\u5730\u590d\u6838", command: "\u68c0\u67e5\u5965\u6797\u5e15\u65af\u57fa\u5730", match: ["\u5965\u6797\u5e15\u65af\u57fa\u5730", "\u62b5\u8fbe\u6d41\u7a0b"] },
+      { key: "loop", label: "\u95ed\u73af\u7cfb\u7edf\u8bfb\u6570", command: "\u6e29\u5ba4\u4eca\u5929\u8981\u6ce8\u610f\u4ec0\u4e48", match: ["\u6e29\u5ba4\u8231", "\u6c34\u5faa\u73af\u6838\u5fc3", "\u751f\u547d\u652f\u6301\u7cfb\u7edf"] },
+      { key: "earth", label: "\u5730\u7403\u5ef6\u8fdf\u56de\u4fe1", command: "\u5730\u7403\u901a\u4fe1\u5ef6\u8fdf\u600e\u4e48\u5904\u7406", match: ["\u5730\u7403\u901a\u4fe1"] },
+    ],
+  },
+  {
+    title: "\u5c18\u66b4\u9884\u6848",
+    focus: "\u628a\u5916\u90e8\u98ce\u9669\u8f6c\u6362\u6210\u53ef\u6267\u884c\u7684\u7535\u529b\u3001\u5de1\u68c0\u548c\u5c01\u95ed\u7b56\u7565\u3002",
+    tasks: [
+      { key: "storm", label: "\u5c18\u66b4\u524d\u7ebf\u8bc4\u4f30", command: "\u68c0\u67e5\u706b\u661f\u5c18\u66b4\u98ce\u9669", match: ["\u5c18\u66b4\u524d\u7ebf", "\u672a\u77e5\u98ce\u9669\u6e90"] },
+      { key: "airlock", label: "\u6c14\u95f8\u4e0e\u5de1\u68c0\u7b56\u7565", command: "\u6c14\u95f8\u73b0\u5728\u5b89\u5168\u5417", match: ["\u5965\u6797\u5e15\u65af\u57fa\u5730", "\u6c14\u95f8\u95e8\u5916\u4fa7\u4f20\u611f\u5668\u5931\u8054"] },
+      { key: "power", label: "\u7535\u529b\u964d\u8f7d\u51b3\u7b56", command: "\u5c18\u66b4\u6765\u4e86\u600e\u4e48\u8282\u7535", match: ["\u8282\u7535\u65b9\u6848", "\u592a\u9633\u80fd\u677f", "\u7535\u529b\u964d\u8f7d\u51b3\u7b56"] },
+    ],
+  },
+  {
+    title: "\u751f\u6001\u95ed\u73af",
+    focus: "\u628a\u6c34\u3001\u6c27\u6c14\u3001\u4f5c\u7269\u548c\u4eba\u7684\u72b6\u6001\u4e32\u6210\u4e00\u4e2a\u53ef\u6301\u7eed\u5faa\u73af\u3002",
+    tasks: [
+      { key: "greenhouse", label: "\u6e29\u5ba4\u83cc\u7fa4\u5904\u7f6e", command: "\u6e29\u5ba4\u4eca\u5929\u8981\u6ce8\u610f\u4ec0\u4e48", match: ["\u6e29\u5ba4\u8231", "\u6e29\u5ba4\u57f9\u517b\u76d8\u51fa\u73b0\u672a\u77e5\u83cc\u6591"] },
+      { key: "water", label: "\u6c34\u5faa\u73af\u538b\u5dee\u6821\u51c6", command: "\u6c34\u5faa\u73af\u5f02\u5e38\u600e\u4e48\u6392\u67e5", match: ["\u6c34\u5faa\u73af\u6838\u5fc3"] },
+      { key: "morale", label: "\u5fc3\u7406\u4fe1\u6807\u7ef4\u62a4", command: "\u6211\u611f\u89c9\u5f88\u5b64\u72ec\uff0c\u600e\u4e48\u529e", match: ["\u5fc3\u7406\u4fe1\u6807", "\u5730\u7403\u5bb6\u5ead\u89c6\u9891\u62b5\u8fbe"] },
+    ],
+  },
+];
+
 const defaultState = {
   sol: 1,
   delay: "12 \u5206 42 \u79d2",
   currentEvent: 0,
   knowledgeIndex: 0,
+  protocolIndex: 0,
+  completedProtocolTasks: [],
   suggestions: quickCommands,
   currentTask: "\u5965\u6797\u5e15\u65af\u57fa\u5730",
   missionLog: [
@@ -265,6 +300,9 @@ const commandForm = $("#commandForm");
 const commandInput = $("#commandInput");
 const checklistEl = $("#checklist");
 const checkProgress = $("#checkProgress");
+const protocolTitle = $("#protocolTitle");
+const protocolProgress = $("#protocolProgress");
+const protocolCard = $("#protocolCard");
 const eventCard = $("#eventCard");
 const eventSeverity = $("#eventSeverity");
 const missionLogEl = $("#missionLog");
@@ -348,6 +386,7 @@ function hydrateStaticText() {
   $("#agentName").textContent = t.agent;
   $("#sendButton").textContent = t.send;
   $("#checkTitle").textContent = t.checklist;
+  protocolTitle.textContent = t.protocol;
   $("#eventTitle").textContent = t.event;
   missionLogTitle.textContent = t.missionLog;
   $("#knowledgeTitle").textContent = t.knowledge;
@@ -375,6 +414,7 @@ function render() {
   renderMetrics();
   renderChat();
   renderChecklist();
+  renderProtocol();
   renderEvent();
   renderMissionLog();
   renderKnowledge();
@@ -429,12 +469,45 @@ function renderChecklist() {
     input.addEventListener("change", () => {
       state.checklist[index].done = input.checked;
       state.metrics.morale = clamp(state.metrics.morale + (input.checked ? 2 : -2));
+      if (input.checked) markProtocolProgress(state.checklist[index].text);
       render();
     });
   });
 
   const done = state.checklist.filter((item) => item.done).length;
   checkProgress.textContent = `${done}/${state.checklist.length}`;
+}
+
+function renderProtocol() {
+  const protocol = getCurrentProtocol();
+  const doneKeys = new Set(state.completedProtocolTasks || []);
+  const done = protocol.tasks.filter((task) => doneKeys.has(task.key)).length;
+  const isComplete = done === protocol.tasks.length;
+  protocolProgress.textContent = `${done}/${protocol.tasks.length}`;
+  protocolCard.innerHTML = `
+    <div class="protocol-head">
+      <strong>${escapeHtml(protocol.title)}</strong>
+      <span>Phase ${String((state.protocolIndex || 0) + 1).padStart(2, "0")}</span>
+    </div>
+    <p>${escapeHtml(protocol.focus)}</p>
+    <div class="protocol-tasks">
+      ${protocol.tasks
+        .map(
+          (task) => `
+            <div class="protocol-task ${doneKeys.has(task.key) ? "is-done" : ""}">
+              <i></i>
+              <span>${escapeHtml(task.label)}</span>
+            </div>
+          `,
+        )
+        .join("")}
+    </div>
+    <button class="protocol-advance" type="button" ${isComplete ? "" : "disabled"}>
+      ${isComplete ? "\u63a8\u8fdb\u5230\u4e0b\u4e00 Sol" : "\u5b8c\u6210\u534f\u8bae\u540e\u89e3\u9501"}
+    </button>
+  `;
+  const advanceButton = protocolCard.querySelector(".protocol-advance");
+  advanceButton.addEventListener("click", advanceProtocol);
 }
 
 function renderEvent() {
@@ -503,8 +576,9 @@ function handleCommand(command) {
     if (changes.length) addMessage("system", formatEffects(changes));
     if (response.advanceEvent) state.currentEvent += 1;
     if (response.advanceSol) state.sol += 1;
-    state.suggestions = response.suggestions || getContextSuggestions();
     state.currentTask = response.task || getTaskLabel(command);
+    markProtocolProgress(state.currentTask, command);
+    state.suggestions = getProtocolSuggestions(response.suggestions || getContextSuggestions());
     addMissionLog(state.currentTask, summarizeCommand(command), changes);
     activeNodeIndex = -1;
     inspectorTitle.textContent = "\u8def\u5f84\u5df2\u91cd\u6784";
@@ -622,7 +696,8 @@ function resolveChoice(index) {
     if (changes.length) addMessage("system", formatEffects(changes));
     state.currentEvent += 1;
     state.knowledgeIndex += 1;
-    state.suggestions = getContextSuggestions();
+    markProtocolProgress(eventTitleForLog, choice.text);
+    state.suggestions = getProtocolSuggestions(getContextSuggestions());
     addMissionLog(eventTitleForLog, choice.text, changes);
     activeNodeIndex = -1;
     inspectorTitle.textContent = "\u540e\u7eed\u98ce\u9669";
@@ -749,6 +824,21 @@ function getContextSuggestions() {
   return quickCommands;
 }
 
+function getProtocolSuggestions(fallback = quickCommands) {
+  const protocol = getCurrentProtocol();
+  const completed = new Set(state.completedProtocolTasks || []);
+  const protocolActions = protocol.tasks
+    .filter((task) => !completed.has(task.key))
+    .map((task) => [task.label, task.command]);
+  const merged = [...protocolActions, ...fallback];
+  const seen = new Set();
+  return merged.filter(([, command]) => {
+    if (seen.has(command)) return false;
+    seen.add(command);
+    return true;
+  }).slice(0, 6);
+}
+
 function formatEffects(changes) {
   const details = changes
     .map(({ key, value, after }) => {
@@ -772,6 +862,58 @@ function addMissionLog(title, body, changes = []) {
     effects,
   });
   state.missionLog = state.missionLog.slice(-24);
+}
+
+function getCurrentProtocol() {
+  return solProtocols[(state.protocolIndex || 0) % solProtocols.length];
+}
+
+function markProtocolProgress(...signals) {
+  const protocol = getCurrentProtocol();
+  const completed = new Set(state.completedProtocolTasks || []);
+  protocol.tasks.forEach((task) => {
+    if (completed.has(task.key)) return;
+    if (signals.some((signal) => task.match.some((item) => signal.includes(item) || item.includes(signal)))) {
+      completed.add(task.key);
+    }
+  });
+  state.completedProtocolTasks = [...completed];
+}
+
+function advanceProtocol() {
+  const protocol = getCurrentProtocol();
+  const completed = new Set(state.completedProtocolTasks || []);
+  const isComplete = protocol.tasks.every((task) => completed.has(task.key));
+  if (!isComplete || isThinking) return;
+  state.protocolIndex = (state.protocolIndex || 0) + 1;
+  state.completedProtocolTasks = [];
+  state.sol += 1;
+  state.delay = getSignalDelay(state.sol);
+  state.currentEvent += 1;
+  state.knowledgeIndex += 1;
+  state.checklist = buildChecklistForProtocol(getCurrentProtocol());
+  state.suggestions = getProtocolSuggestions(quickCommands);
+  addMessage("system", `Sol ${String(state.sol).padStart(3, "0")} \u5df2\u542f\u52a8\uff1a${getCurrentProtocol().title}`);
+  addMissionLog(getCurrentProtocol().title, "\u4efb\u52a1\u534f\u8bae\u5df2\u8fdb\u5165\u4e0b\u4e00\u9636\u6bb5\u3002", [
+    { key: "morale", value: 2, after: clamp(state.metrics.morale + 2) },
+  ]);
+  state.metrics.morale = clamp(state.metrics.morale + 2);
+  pulseNetwork(2);
+  render();
+}
+
+function buildChecklistForProtocol(protocol) {
+  const staticItems = [
+    "\u8bb0\u5f55\u5f53\u524d\u516d\u9879\u57fa\u5730\u8bfb\u6570",
+    "\u5411\u5730\u7403\u53d1\u9001 280 \u5b57\u4ee5\u5185\u72b6\u6001\u6458\u8981",
+  ];
+  return [...protocol.tasks.map((task) => task.label), ...staticItems].map((text) => ({ text, done: false }));
+}
+
+function getSignalDelay(sol) {
+  const minute = 12 + ((sol * 7) % 9);
+  const second = 18 + ((sol * 13) % 41);
+  return `${minute} \u5206 ${String(second).padStart(2, "0")} \u79d2`;
 }
 
 function summarizeCommand(command) {
