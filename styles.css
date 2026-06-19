@@ -1069,6 +1069,39 @@ button {
   line-height: 1.4;
 }
 
+.report-panel {
+  display: grid;
+  gap: 8px;
+}
+
+.report-panel button {
+  min-height: 38px;
+  border: 1px solid rgba(156, 236, 255, 0.22);
+  border-radius: 6px;
+  background: rgba(156, 236, 255, 0.12);
+  color: var(--text);
+  font-weight: 800;
+}
+
+.report-panel textarea {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  border: 1px solid rgba(204, 232, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(3, 5, 12, 0.48);
+  color: rgba(247, 245, 239, 0.88);
+  padding: 10px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  outline: 0;
+}
+
+.report-panel textarea:focus {
+  border-color: rgba(156, 236, 255, 0.42);
+}
+
 .check-item {
   display: grid;
   grid-template-columns: 24px minmax(0, 1fr);

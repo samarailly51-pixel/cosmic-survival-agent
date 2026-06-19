@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>&#26410;&#26469;&#26143;&#38469;&#29983;&#23384;&#25351;&#21335; AI Agent</title>
-    <link rel="stylesheet" href="./styles.css?v=20260619-english-intro" />
+    <link rel="stylesheet" href="./styles.css?v=20260619-report-generator" />
   </head>
   <body>
     <canvas class="neural-backdrop" id="neuralBackdrop" aria-hidden="true"></canvas>
@@ -134,6 +134,17 @@
 
         <section>
           <div class="section-title">
+            <h2 id="reportTitle"></h2>
+            <span id="reportStatus">MD</span>
+          </div>
+          <div class="report-panel">
+            <button id="reportButton" type="button"></button>
+            <textarea id="missionReport" readonly rows="8"></textarea>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">
             <h2 id="knowledgeTitle"></h2>
             <span id="chipIndex">01</span>
           </div>
@@ -142,6 +153,6 @@
       </aside>
     </main>
 
-    <script src="./app.js?v=20260619-english-intro"></script>
+    <script src="./app.js?v=20260619-report-generator"></script>
   </body>
 </html>
