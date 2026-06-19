@@ -4,6 +4,8 @@ const t = {
   title: "\u672a\u6765\u661f\u9645\u751f\u5b58\u6307\u5357",
   intro:
     "\u4e00\u5f20\u4ee5 AI \u4e3a\u4e2d\u5fc3\u7684\u6df1\u7a7a\u661f\u56fe\uff0c\u628a\u884c\u661f\u3001\u57fa\u5730\u3001\u4eba\u7c7b\u72b6\u6001\u548c\u751f\u5b58\u51b3\u7b56\u8fde\u6210\u4e00\u7247\u661f\u4e91\u3002",
+  introEn:
+    "An interactive Mars survival AI prototype that connects base systems, habitat modules, risk decisions, Sol protocols, and resource trade-offs into a nebula-style mission interface.",
   sol: "\u4efb\u52a1\u65e5",
   delay: "\u4fe1\u53f7\u5ef6\u8fdf",
   risk: "\u5f53\u524d\u98ce\u9669",
@@ -453,6 +455,7 @@ window.addEventListener("resize", () => {
 function hydrateStaticText() {
   $("#appTitle").textContent = t.title;
   $("#appIntro").textContent = t.intro;
+  $("#appIntroEn").textContent = t.introEn;
   $("#solLabel").textContent = t.sol;
   $("#delayLabel").textContent = t.delay;
   $("#riskTitle").textContent = t.risk;

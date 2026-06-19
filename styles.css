@@ -336,6 +336,14 @@ button {
   line-height: 1.65;
 }
 
+.mission-heading .intro-en {
+  max-width: 35rem;
+  margin-top: 8px;
+  color: rgba(214, 225, 238, 0.76);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
 .eyebrow {
   margin: 0 0 8px;
   color: var(--cyan);

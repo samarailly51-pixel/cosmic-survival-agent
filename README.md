@@ -4,6 +4,12 @@
 
 当前阶段先聚焦火星任务网络：奥林帕斯基地、温室舱、水循环核心、尘暴前线、地球通信和心理信标共同构成第一张可玩的生存星图。视觉上保留“深空星云”方向，后续再扩展到月球、木卫二、小行星带等其他星球/星区。
 
+## English Overview
+
+Future Interstellar Survival Guide AI Agent is a zero-dependency static web prototype for an interactive Mars survival experience. It presents Olympus Base as a nebula-style mission interface where users can inspect habitat modules, monitor oxygen, water, power, morale, radiation, and dust risk, make event decisions, advance Sol protocols, and let the AI agent recommend the next survival action.
+
+The current version focuses on Mars first. Future chapters can expand the same interaction model to the Moon, Europa, asteroid belts, and deep-space habitats.
+
 ## 在线发布
 
 这个项目可以直接部署到 GitHub Pages。仓库推送到 GitHub 后，在仓库设置里启用 Pages，或使用本项目内置的 GitHub Actions 工作流自动发布。
@@ -37,6 +43,16 @@ http://127.0.0.1:8765/index.html
 - 事件决策卡：不同选择会影响资源数值并推进事件
 - 任务日志：记录每个 Sol 的节点选择、事件决策和资源变化
 - 本地状态保存：浏览器会通过 `localStorage` 保留当前状态，右上角 `R` 可重置
+
+## Features In English
+
+- Nebula-style interactive mission map centered on an AI navigation core
+- Olympus Base compartment map with clickable habitat, airlock, power, greenhouse, water loop, and communications modules
+- Sol protocol progression with three key objectives per phase
+- AI risk advisor that detects fragile resource chains and suggests the next action
+- Base phase status that reflects overall habitat stability and completed protocols
+- Resource dashboard for oxygen, water loop, power, morale, radiation risk, and dust storm pressure
+- Event decision cards, mission logs, and local browser state persistence
 
 ## 项目结构
 
