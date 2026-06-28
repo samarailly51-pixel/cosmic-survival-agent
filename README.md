@@ -43,6 +43,7 @@ http://127.0.0.1:8765/index.html
 - 事件决策卡：不同选择会影响资源数值并推进事件
 - 任务日志：记录每个 Sol 的节点选择、事件决策和资源变化
 - 任务报告生成器：把当前 Sol、资源读数、协议进度和最新日志导出为 Markdown 摘要
+- 中英文界面切换：页面主标题、面板标题、控制按钮和状态提示支持中英文切换
 - 本地状态保存：浏览器会通过 `localStorage` 保留当前状态，右上角 `R` 可重置
 
 ## Features In English
@@ -55,6 +56,7 @@ http://127.0.0.1:8765/index.html
 - Resource dashboard for oxygen, water loop, power, morale, radiation risk, and dust storm pressure
 - Event decision cards, mission logs, and local browser state persistence
 - Markdown mission report generator for demos, handoff notes, and future AI summaries
+- Chinese / English UI toggle for primary labels, controls, status hints, and report controls
 
 ## 项目结构
 

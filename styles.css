@@ -567,6 +567,25 @@ button {
   font-size: 1.15rem;
 }
 
+.header-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.language-toggle {
+  min-height: 36px;
+  border: 1px solid rgba(156, 236, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(156, 236, 255, 0.1);
+  color: var(--text);
+  padding: 0 10px;
+  font-size: 0.8rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
 .icon-button {
   display: grid;
   flex: 0 0 auto;

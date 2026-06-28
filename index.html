@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>&#26410;&#26469;&#26143;&#38469;&#29983;&#23384;&#25351;&#21335; AI Agent</title>
-    <link rel="stylesheet" href="./styles.css?v=20260619-report-generator" />
+    <link rel="stylesheet" href="./styles.css?v=20260628-language-toggle" />
   </head>
   <body>
     <canvas class="neural-backdrop" id="neuralBackdrop" aria-hidden="true"></canvas>
@@ -58,10 +58,13 @@
             <p class="eyebrow">Nebula Navigator</p>
             <h2 id="agentName"></h2>
           </div>
-          <button class="icon-button" id="resetButton" type="button" title="Reset mission">
-            <span aria-hidden="true">R</span>
-            <span class="sr-only">Reset mission</span>
-          </button>
+          <div class="header-actions">
+            <button class="language-toggle" id="languageToggle" type="button">中 / EN</button>
+            <button class="icon-button" id="resetButton" type="button" title="Reset mission">
+              <span aria-hidden="true">R</span>
+              <span class="sr-only">Reset mission</span>
+            </button>
+          </div>
         </header>
 
         <div class="neural-interface" id="neuralInterface">
@@ -153,6 +156,6 @@
       </aside>
     </main>
 
-    <script src="./app.js?v=20260619-report-generator"></script>
+    <script src="./app.js?v=20260628-language-toggle"></script>
   </body>
 </html>

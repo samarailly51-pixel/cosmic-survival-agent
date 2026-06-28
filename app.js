@@ -1,28 +1,88 @@
-const STORAGE_KEY = "cosmic-survival-agent-state-v9";
+const STORAGE_KEY = "cosmic-survival-agent-state-v10";
 
-const t = {
-  title: "\u672a\u6765\u661f\u9645\u751f\u5b58\u6307\u5357",
-  intro:
-    "\u4e00\u5f20\u4ee5 AI \u4e3a\u4e2d\u5fc3\u7684\u6df1\u7a7a\u661f\u56fe\uff0c\u628a\u884c\u661f\u3001\u57fa\u5730\u3001\u4eba\u7c7b\u72b6\u6001\u548c\u751f\u5b58\u51b3\u7b56\u8fde\u6210\u4e00\u7247\u661f\u4e91\u3002",
-  introEn:
-    "An interactive Mars survival AI prototype that connects base systems, habitat modules, risk decisions, Sol protocols, and resource trade-offs into a nebula-style mission interface.",
-  sol: "\u4efb\u52a1\u65e5",
-  delay: "\u4fe1\u53f7\u5ef6\u8fdf",
-  risk: "\u5f53\u524d\u98ce\u9669",
-  agent: "\u661f\u56fe\u5bfc\u822a AI\uff1a\u795d\u878d-03",
-  send: "\u53d1\u9001",
-  placeholder: "\u95ee\uff1a\u5f53\u524d\u661f\u533a\u6700\u9700\u8981\u6211\u6ce8\u610f\u4ec0\u4e48\uff1f",
-  checklist: "\u4eca\u65e5\u6e05\u5355",
-  protocol: "Sol \u4efb\u52a1\u534f\u8bae",
-  event: "\u4e8b\u4ef6\u51b3\u7b56",
-  missionLog: "\u4efb\u52a1\u65e5\u5fd7",
-  report: "\u4efb\u52a1\u62a5\u544a",
-  generateReport: "\u751f\u6210\u62a5\u544a",
-  knowledge: "\u77e5\u8bc6\u82af\u7247",
-  standby: "\u5f85\u547d",
-  controllable: "\u53ef\u63a7",
-  tense: "\u7d27\u5f20",
-  danger: "\u5371\u9669",
+const copy = {
+  zh: {
+    title: "\u672a\u6765\u661f\u9645\u751f\u5b58\u6307\u5357",
+    intro:
+      "\u4e00\u5f20\u4ee5 AI \u4e3a\u4e2d\u5fc3\u7684\u6df1\u7a7a\u661f\u56fe\uff0c\u628a\u884c\u661f\u3001\u57fa\u5730\u3001\u4eba\u7c7b\u72b6\u6001\u548c\u751f\u5b58\u51b3\u7b56\u8fde\u6210\u4e00\u7247\u661f\u4e91\u3002",
+    introEn:
+      "An interactive Mars survival AI prototype that connects base systems, habitat modules, risk decisions, Sol protocols, and resource trade-offs into a nebula-style mission interface.",
+    sol: "\u4efb\u52a1\u65e5",
+    delay: "\u4fe1\u53f7\u5ef6\u8fdf",
+    risk: "\u5f53\u524d\u98ce\u9669",
+    agent: "\u661f\u56fe\u5bfc\u822a AI\uff1a\u795d\u878d-03",
+    send: "\u53d1\u9001",
+    placeholder: "\u95ee\uff1a\u5f53\u524d\u661f\u533a\u6700\u9700\u8981\u6211\u6ce8\u610f\u4ec0\u4e48\uff1f",
+    checklist: "\u4eca\u65e5\u6e05\u5355",
+    protocol: "Sol \u4efb\u52a1\u534f\u8bae",
+    event: "\u4e8b\u4ef6\u51b3\u7b56",
+    missionLog: "\u4efb\u52a1\u65e5\u5fd7",
+    report: "\u4efb\u52a1\u62a5\u544a",
+    generateReport: "\u751f\u6210\u62a5\u544a",
+    reportReady: "\u5df2\u751f\u6210",
+    reportPlaceholder: "\u70b9\u51fb\u751f\u6210\u62a5\u544a\uff0c\u5bfc\u51fa\u5f53\u524d Sol \u72b6\u6001\u3001\u8d44\u6e90\u8bfb\u6570\u548c\u6700\u65b0\u65e5\u5fd7\u3002",
+    knowledge: "\u77e5\u8bc6\u82af\u7247",
+    standby: "\u5f85\u547d",
+    controllable: "\u53ef\u63a7",
+    tense: "\u7d27\u5f20",
+    danger: "\u5371\u9669",
+    showAll: "\u663e\u793a\u5168\u90e8",
+    focusLabels: "\u805a\u7126\u6807\u7b7e",
+    pause: "\u6682\u505c",
+    resume: "\u7ee7\u7eed",
+    riskAdvisor: "AI \u98ce\u9669\u8bca\u65ad",
+    baseStatus: "\u57fa\u5730\u9636\u6bb5\u72b6\u6001",
+    completedPhases: "\u5df2\u7a33\u5b9a\u9636\u6bb5",
+    currentThread: "\u5f53\u524d\u4e3b\u7ebf",
+    baseMapHint: "\u70b9\u51fb\u8231\u5ba4\u533a\u57df\uff0c\u795d\u878d-03 \u4f1a\u8fdb\u5165\u5bf9\u5e94\u7684\u68c0\u67e5\u6d41\u7a0b\u3002",
+    baseMapOnline: "\u516d\u8231\u5ba4\u5728\u7ebf",
+    baseMapWatch: "\u9700\u8f6e\u503c\u76d1\u63a7",
+    baseMapCritical: "\u6709\u8231\u5ba4\u4e34\u754c",
+    stable: "\u7a33\u5b9a",
+    watch: "\u6ce8\u610f",
+    critical: "\u4e34\u754c",
+  },
+  en: {
+    title: "Future Interstellar Survival Guide",
+    intro:
+      "A deep-space survival map centered on an AI agent, connecting planets, habitats, human state, and mission decisions into one living nebula.",
+    introEn:
+      "Mars-first prototype: inspect Olympus Base modules, manage resources, resolve events, advance Sol protocols, and generate mission reports.",
+    sol: "Mission Sol",
+    delay: "Signal Delay",
+    risk: "Current Risk",
+    agent: "Star Map Navigation AI: Zhurong-03",
+    send: "Send",
+    placeholder: "Ask: what needs my attention most in the current sector?",
+    checklist: "Daily Checklist",
+    protocol: "Sol Protocol",
+    event: "Event Decision",
+    missionLog: "Mission Log",
+    report: "Mission Report",
+    generateReport: "Generate Report",
+    reportReady: "Generated",
+    reportPlaceholder: "Generate a Markdown report with current Sol status, resources, protocol progress, and recent logs.",
+    knowledge: "Knowledge Chip",
+    standby: "Standby",
+    controllable: "Controlled",
+    tense: "Tense",
+    danger: "Danger",
+    showAll: "Show All",
+    focusLabels: "Focus Labels",
+    pause: "Pause",
+    resume: "Resume",
+    riskAdvisor: "AI Risk Advisor",
+    baseStatus: "Base Phase Status",
+    completedPhases: "Completed Phases",
+    currentThread: "Current Thread",
+    baseMapHint: "Click a habitat module and Zhurong-03 will enter the matching inspection flow.",
+    baseMapOnline: "Six Modules Online",
+    baseMapWatch: "Watch Rotation Needed",
+    baseMapCritical: "Module Critical",
+    stable: "Stable",
+    watch: "Watch",
+    critical: "Critical",
+  },
 };
 
 const visualSettings = {
@@ -31,6 +91,8 @@ const visualSettings = {
   showAllLabels: true,
   paused: false,
 };
+
+let t = copy.zh;
 
 const quickCommands = [
   ["\u5965\u6797\u5e15\u65af\u57fa\u5730", "\u68c0\u67e5\u5965\u6797\u5e15\u65af\u57fa\u5730"],
@@ -183,6 +245,7 @@ const defaultState = {
   delay: "12 \u5206 42 \u79d2",
   currentEvent: 0,
   knowledgeIndex: 0,
+  language: "zh",
   protocolIndex: 0,
   completedProtocolTasks: [],
   completedPhases: [],
@@ -392,6 +455,7 @@ const missionReport = $("#missionReport");
 const knowledgeCard = $("#knowledgeCard");
 const chipIndex = $("#chipIndex");
 const resetButton = $("#resetButton");
+const languageToggle = $("#languageToggle");
 const agentPanel = $(".agent-panel");
 const neuralInterface = $("#neuralInterface");
 const neuralCanvas = $("#neuralCanvas");
@@ -410,6 +474,7 @@ let neuralPulse = 0;
 let backdropPulse = 0;
 let neuralAnimationFrame = 0;
 
+applyLanguage();
 hydrateStaticText();
 render();
 initNeuralCanvases();
@@ -435,23 +500,32 @@ lineBrightness.addEventListener("input", () => {
 labelsToggle.addEventListener("click", () => {
   visualSettings.showAllLabels = !visualSettings.showAllLabels;
   labelsToggle.classList.toggle("is-on", visualSettings.showAllLabels);
-  labelsToggle.textContent = visualSettings.showAllLabels ? "\u663e\u793a\u5168\u90e8" : "\u805a\u7126\u6807\u7b7e";
+  labelsToggle.textContent = visualSettings.showAllLabels ? t.showAll : t.focusLabels;
   pulseNetwork(1);
 });
 
 motionToggle.addEventListener("click", () => {
   visualSettings.paused = !visualSettings.paused;
   motionToggle.classList.toggle("is-on", visualSettings.paused);
-  motionToggle.textContent = visualSettings.paused ? "\u7ee7\u7eed" : "\u6682\u505c";
+  motionToggle.textContent = visualSettings.paused ? t.resume : t.pause;
 });
 
 reportButton.addEventListener("click", () => {
   missionReport.value = generateMissionReport();
-  reportStatus.textContent = "\u5df2\u751f\u6210";
+  reportStatus.textContent = t.reportReady;
+});
+
+languageToggle.addEventListener("click", () => {
+  state.language = state.language === "en" ? "zh" : "en";
+  applyLanguage();
+  hydrateStaticText();
+  render();
 });
 
 resetButton.addEventListener("click", () => {
   state = structuredClone(defaultState);
+  applyLanguage();
+  hydrateStaticText();
   saveState();
   pulseNetwork(1.4);
   render();
@@ -478,11 +552,13 @@ function hydrateStaticText() {
   missionLogTitle.textContent = t.missionLog;
   reportTitle.textContent = t.report;
   reportButton.textContent = t.generateReport;
-  missionReport.placeholder = "\u70b9\u51fb\u751f\u6210\u62a5\u544a\uff0c\u5bfc\u51fa\u5f53\u524d Sol \u72b6\u6001\u3001\u8d44\u6e90\u8bfb\u6570\u548c\u6700\u65b0\u65e5\u5fd7\u3002";
+  missionReport.placeholder = t.reportPlaceholder;
   $("#knowledgeTitle").textContent = t.knowledge;
   eventSeverity.textContent = t.standby;
   commandInput.placeholder = t.placeholder;
   labelsToggle.classList.add("is-on");
+  labelsToggle.textContent = visualSettings.showAllLabels ? t.showAll : t.focusLabels;
+  motionToggle.textContent = visualSettings.paused ? t.resume : t.pause;
   renderSuggestions();
 }
 
@@ -497,6 +573,16 @@ function loadState() {
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function applyLanguage() {
+  state.language = state.language === "en" ? "en" : "zh";
+  t = copy[state.language];
+  document.documentElement.lang = state.language === "en" ? "en" : "zh-CN";
+  if (languageToggle) {
+    languageToggle.textContent = state.language === "en" ? "EN / \u4e2d" : "\u4e2d / EN";
+    languageToggle.setAttribute("aria-pressed", String(state.language === "en"));
+  }
 }
 
 function render() {
@@ -547,7 +633,7 @@ function renderBaseMap() {
         })
         .join("")}
     </div>
-    <p id="baseMapMeta">\u70b9\u51fb\u8231\u5ba4\u533a\u57df\uff0c\u795d\u878d-03 \u4f1a\u8fdb\u5165\u5bf9\u5e94\u7684\u68c0\u67e5\u6d41\u7a0b\u3002</p>
+    <p id="baseMapMeta">${escapeHtml(t.baseMapHint)}</p>
   `;
   baseMap.querySelectorAll("[data-compartment]").forEach((button) => {
     button.addEventListener("mouseenter", () => {
@@ -585,7 +671,7 @@ function renderRiskAdvisor() {
   const diagnosis = getRiskDiagnosis();
   riskAdvisor.innerHTML = `
     <div class="risk-advisor-head">
-      <span>AI \u98ce\u9669\u8bca\u65ad</span>
+      <span>${escapeHtml(t.riskAdvisor)}</span>
       <strong>${escapeHtml(diagnosis.level)}</strong>
     </div>
     <p>${escapeHtml(diagnosis.summary)}</p>
@@ -610,15 +696,15 @@ function renderBasePhase() {
   const caption = getBasePhaseCaption(stability);
   basePhase.innerHTML = `
     <div class="base-phase-head">
-      <span>\u57fa\u5730\u9636\u6bb5\u72b6\u6001</span>
+      <span>${escapeHtml(t.baseStatus)}</span>
       <strong>${escapeHtml(stability.label)}</strong>
     </div>
     <div class="phase-meter" style="--phase-value: ${stability.score}%">
       <i></i>
     </div>
     <div class="phase-stats">
-      <span>\u5df2\u7a33\u5b9a\u9636\u6bb5 ${completedCount}</span>
-      <span>\u5f53\u524d\u4e3b\u7ebf ${escapeHtml(current.title)}</span>
+      <span>${escapeHtml(t.completedPhases)} ${completedCount}</span>
+      <span>${escapeHtml(t.currentThread)} ${escapeHtml(current.title)}</span>
     </div>
     <p>${escapeHtml(caption)}</p>
   `;
@@ -983,16 +1069,16 @@ function getCompartmentState(room) {
   const value = state.metrics[room.metric] ?? 100;
   const isHazard = room.metric === "radiation" || room.metric === "dust";
   const pressure = isHazard ? value : 100 - value;
-  if (pressure >= 58) return { label: "\u4e34\u754c", className: "is-critical" };
-  if (pressure >= 42) return { label: "\u6ce8\u610f", className: "is-watch" };
-  return { label: "\u7a33\u5b9a", className: "is-stable" };
+  if (pressure >= 58) return { label: t.critical, className: "is-critical" };
+  if (pressure >= 42) return { label: t.watch, className: "is-watch" };
+  return { label: t.stable, className: "is-stable" };
 }
 
 function getBaseMapStatus() {
   const states = baseCompartments.map(getCompartmentState);
-  if (states.some((item) => item.className === "is-critical")) return "\u6709\u8231\u5ba4\u4e34\u754c";
-  if (states.some((item) => item.className === "is-watch")) return "\u9700\u8f6e\u503c\u76d1\u63a7";
-  return "\u516d\u8231\u5ba4\u5728\u7ebf";
+  if (states.some((item) => item.className === "is-critical")) return t.baseMapCritical;
+  if (states.some((item) => item.className === "is-watch")) return t.baseMapWatch;
+  return t.baseMapOnline;
 }
 
 function getRiskDiagnosis() {
@@ -1009,20 +1095,29 @@ function getRiskDiagnosis() {
     .sort((a, b) => b.score - a.score);
   const [primary, secondary] = entries;
   const protocol = getCurrentProtocol();
-  const level = primary.score > 58 ? "\u7acb\u5373\u5904\u7406" : primary.score > 42 ? "\u9700\u76d1\u63a7" : "\u53ef\u63a7";
+  const isEnglish = state.language === "en";
+  const level = primary.score > 58
+    ? isEnglish ? "Immediate" : "\u7acb\u5373\u5904\u7406"
+    : primary.score > 42
+      ? isEnglish ? "Monitor" : "\u9700\u76d1\u63a7"
+      : isEnglish ? "Controlled" : "\u53ef\u63a7";
   const actionMap = {
-    oxygen: ["\u6267\u884c\u6c27\u6c14\u6392\u67e5", "\u6c27\u6c14\u4e0b\u964d\u4e86\u600e\u4e48\u529e"],
-    water: ["\u68c0\u67e5\u6c34\u5faa\u73af", "\u6c34\u5faa\u73af\u5f02\u5e38\u600e\u4e48\u6392\u67e5"],
-    power: ["\u751f\u6210\u8282\u7535\u65b9\u6848", "\u5c18\u66b4\u6765\u4e86\u600e\u4e48\u8282\u7535"],
-    morale: ["\u7ef4\u62a4\u5fc3\u7406\u4fe1\u6807", "\u6211\u611f\u89c9\u5f88\u5b64\u72ec\uff0c\u600e\u4e48\u529e"],
-    radiation: ["\u590d\u6838\u8f90\u5c04\u7b56\u7565", "\u8f90\u5c04\u98ce\u9669\u4e0a\u5347\u600e\u4e48\u5904\u7406"],
-    dust: ["\u8bc4\u4f30\u5c18\u66b4\u524d\u7ebf", "\u68c0\u67e5\u706b\u661f\u5c18\u66b4\u98ce\u9669"],
+    oxygen: [isEnglish ? "Run oxygen check" : "\u6267\u884c\u6c27\u6c14\u6392\u67e5", "\u6c27\u6c14\u4e0b\u964d\u4e86\u600e\u4e48\u529e"],
+    water: [isEnglish ? "Inspect water loop" : "\u68c0\u67e5\u6c34\u5faa\u73af", "\u6c34\u5faa\u73af\u5f02\u5e38\u600e\u4e48\u6392\u67e5"],
+    power: [isEnglish ? "Generate power plan" : "\u751f\u6210\u8282\u7535\u65b9\u6848", "\u5c18\u66b4\u6765\u4e86\u600e\u4e48\u8282\u7535"],
+    morale: [isEnglish ? "Maintain morale beacon" : "\u7ef4\u62a4\u5fc3\u7406\u4fe1\u6807", "\u6211\u611f\u89c9\u5f88\u5b64\u72ec\uff0c\u600e\u4e48\u529e"],
+    radiation: [isEnglish ? "Review radiation plan" : "\u590d\u6838\u8f90\u5c04\u7b56\u7565", "\u8f90\u5c04\u98ce\u9669\u4e0a\u5347\u600e\u4e48\u5904\u7406"],
+    dust: [isEnglish ? "Assess dust front" : "\u8bc4\u4f30\u5c18\u66b4\u524d\u7ebf", "\u68c0\u67e5\u706b\u661f\u5c18\u66b4\u98ce\u9669"],
   };
   const [action, command] = actionMap[primary.key];
   const summary =
     primary.score > 42
-      ? `${primary.label}\u662f\u5f53\u524d\u6700\u8106\u5f31\u94fe\u8def\uff0c${secondary.label}\u4f1a\u653e\u5927\u5b83\u7684\u540e\u679c\u3002`
-      : `${protocol.title}\u4ecd\u662f\u4e3b\u7ebf\uff0c\u8d44\u6e90\u8bfb\u6570\u6682\u65f6\u6ca1\u6709\u51fa\u73b0\u5355\u70b9\u5931\u63a7\u3002`;
+      ? isEnglish
+        ? `${primary.label} is the weakest current link; ${secondary.label} may amplify the consequence.`
+        : `${primary.label}\u662f\u5f53\u524d\u6700\u8106\u5f31\u94fe\u8def\uff0c${secondary.label}\u4f1a\u653e\u5927\u5b83\u7684\u540e\u679c\u3002`
+      : isEnglish
+        ? `${protocol.title} remains the main thread; no single resource is out of control.`
+        : `${protocol.title}\u4ecd\u662f\u4e3b\u7ebf\uff0c\u8d44\u6e90\u8bfb\u6570\u6682\u65f6\u6ca1\u6709\u51fa\u73b0\u5355\u70b9\u5931\u63a7\u3002`;
   return {
     level,
     summary,
@@ -1139,6 +1234,7 @@ function addMissionLog(title, body, changes = []) {
 }
 
 function generateMissionReport() {
+  const isEnglish = state.language === "en";
   const protocol = getCurrentProtocol();
   const completed = new Set(state.completedProtocolTasks || []);
   const stability = getBaseStability();
@@ -1160,25 +1256,27 @@ function generateMissionReport() {
     : "- No mission log entries yet.";
 
   return [
-    "# Olympus Base Mission Report",
+    isEnglish ? "# Olympus Base Mission Report" : "# \u5965\u6797\u5e15\u65af\u57fa\u5730\u4efb\u52a1\u62a5\u544a",
     "",
-    `- Sol: ${String(state.sol).padStart(3, "0")}`,
-    `- Signal delay: ${state.delay}`,
-    `- Current protocol: ${protocol.title}`,
-    `- Base phase: ${stability.label} (${stability.score}%)`,
-    `- AI risk diagnosis: ${diagnosis.level}`,
-    `- Recommended action: ${diagnosis.action} / ${diagnosis.command}`,
+    `- ${isEnglish ? "Sol" : "\u4efb\u52a1\u65e5"}: ${String(state.sol).padStart(3, "0")}`,
+    `- ${isEnglish ? "Signal delay" : "\u4fe1\u53f7\u5ef6\u8fdf"}: ${state.delay}`,
+    `- ${isEnglish ? "Current protocol" : "\u5f53\u524d\u534f\u8bae"}: ${protocol.title}`,
+    `- ${isEnglish ? "Base phase" : "\u57fa\u5730\u9636\u6bb5"}: ${stability.label} (${stability.score}%)`,
+    `- ${isEnglish ? "AI risk diagnosis" : "AI \u98ce\u9669\u8bca\u65ad"}: ${diagnosis.level}`,
+    `- ${isEnglish ? "Recommended action" : "\u5efa\u8bae\u884c\u52a8"}: ${diagnosis.action} / ${diagnosis.command}`,
     "",
-    "## Resource Snapshot",
+    isEnglish ? "## Resource Snapshot" : "## \u8d44\u6e90\u5feb\u7167",
     metrics,
     "",
-    "## Sol Protocol Checklist",
+    isEnglish ? "## Sol Protocol Checklist" : "## Sol \u534f\u8bae\u6e05\u5355",
     tasks,
     "",
-    "## Recent Mission Log",
+    isEnglish ? "## Recent Mission Log" : "## \u6700\u8fd1\u4efb\u52a1\u65e5\u5fd7",
     logs,
     "",
-    "Generated by Future Interstellar Survival Guide AI Agent.",
+    isEnglish
+      ? "Generated by Future Interstellar Survival Guide AI Agent."
+      : "\u7531\u672a\u6765\u661f\u9645\u751f\u5b58\u6307\u5357 AI Agent \u751f\u6210\u3002",
   ].join("\n");
 }
 
@@ -1226,23 +1324,33 @@ function getBaseStability() {
   const hazards = state.metrics.radiation + state.metrics.dust;
   const completedBonus = Math.min(18, (state.completedPhases?.length || 0) * 4);
   const score = clamp((positive / 4) - hazards * 0.22 + completedBonus);
-  if (score >= 78) return { score, label: "\u7a33\u5b9a\u6269\u5c55" };
-  if (score >= 62) return { score, label: "\u53ef\u6301\u7eed\u8fd0\u884c" };
-  if (score >= 46) return { score, label: "\u538b\u529b\u8fd0\u884c" };
-  return { score, label: "\u4e34\u754c\u7ef4\u6301" };
+  const isEnglish = state.language === "en";
+  if (score >= 78) return { score, label: isEnglish ? "Stable Expansion" : "\u7a33\u5b9a\u6269\u5c55" };
+  if (score >= 62) return { score, label: isEnglish ? "Sustainable" : "\u53ef\u6301\u7eed\u8fd0\u884c" };
+  if (score >= 46) return { score, label: isEnglish ? "Strained" : "\u538b\u529b\u8fd0\u884c" };
+  return { score, label: isEnglish ? "Critical Hold" : "\u4e34\u754c\u7ef4\u6301" };
 }
 
 function getBasePhaseCaption(stability) {
+  const isEnglish = state.language === "en";
   if (stability.score >= 78) {
-    return "\u57fa\u5730\u5df2\u4ece\u751f\u5b58\u6a21\u5f0f\u8f6c\u5411\u6269\u5c55\u6a21\u5f0f\uff0c\u53ef\u4ee5\u5f00\u59cb\u8003\u8651\u66f4\u8fdc\u7684\u706b\u661f\u533a\u57df\u3002";
+    return isEnglish
+      ? "The base is shifting from survival mode toward expansion and can begin considering more distant Mars regions."
+      : "\u57fa\u5730\u5df2\u4ece\u751f\u5b58\u6a21\u5f0f\u8f6c\u5411\u6269\u5c55\u6a21\u5f0f\uff0c\u53ef\u4ee5\u5f00\u59cb\u8003\u8651\u66f4\u8fdc\u7684\u706b\u661f\u533a\u57df\u3002";
   }
   if (stability.score >= 62) {
-    return "\u57fa\u5730\u80fd\u7ef4\u6301\u8fde\u7eed\u8fd0\u884c\uff0c\u4f46\u4efb\u4f55\u5916\u90e8\u98ce\u9669\u90fd\u4f1a\u653e\u5927\u8d44\u6e90\u6d88\u8017\u3002";
+    return isEnglish
+      ? "The habitat can sustain operations, but external risk will quickly amplify resource consumption."
+      : "\u57fa\u5730\u80fd\u7ef4\u6301\u8fde\u7eed\u8fd0\u884c\uff0c\u4f46\u4efb\u4f55\u5916\u90e8\u98ce\u9669\u90fd\u4f1a\u653e\u5927\u8d44\u6e90\u6d88\u8017\u3002";
   }
   if (stability.score >= 46) {
-    return "\u57fa\u5730\u4ecd\u5728\u8fd0\u884c\uff0c\u4f46\u7cfb\u7edf\u6ca1\u6709\u592a\u591a\u5197\u4f59\uff0c\u4e0b\u4e00\u6b65\u9700\u8981\u5148\u964d\u4f4e\u8106\u5f31\u94fe\u8def\u3002";
+    return isEnglish
+      ? "The base is still operating, but redundancy is thin; reduce the weakest link before adding pressure."
+      : "\u57fa\u5730\u4ecd\u5728\u8fd0\u884c\uff0c\u4f46\u7cfb\u7edf\u6ca1\u6709\u592a\u591a\u5197\u4f59\uff0c\u4e0b\u4e00\u6b65\u9700\u8981\u5148\u964d\u4f4e\u8106\u5f31\u94fe\u8def\u3002";
   }
-  return "\u57fa\u5730\u5df2\u63a5\u8fd1\u4e34\u754c\u72b6\u6001\uff0c\u5e94\u505c\u6b62\u975e\u5fc5\u8981\u884c\u52a8\uff0c\u4f18\u5148\u4fdd\u547d\u4e0e\u4fdd\u6301\u95ed\u73af\u3002";
+  return isEnglish
+    ? "The base is near a critical state. Stop nonessential actions and preserve life support first."
+    : "\u57fa\u5730\u5df2\u63a5\u8fd1\u4e34\u754c\u72b6\u6001\uff0c\u5e94\u505c\u6b62\u975e\u5fc5\u8981\u884c\u52a8\uff0c\u4f18\u5148\u4fdd\u547d\u4e0e\u4fdd\u6301\u95ed\u73af\u3002";
 }
 
 function buildChecklistForProtocol(protocol) {
