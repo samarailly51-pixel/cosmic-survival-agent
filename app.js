@@ -523,7 +523,9 @@ languageToggle.addEventListener("click", () => {
 });
 
 resetButton.addEventListener("click", () => {
+  const currentLanguage = state.language;
   state = structuredClone(defaultState);
+  state.language = currentLanguage;
   applyLanguage();
   hydrateStaticText();
   saveState();
